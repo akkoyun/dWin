@@ -34,7 +34,7 @@ class dwin {
 		 * @return true - Succsess
 		 * @return false - Failed
 		 */
-		bool Write_VP(const uint16 _Address, const char *_Data);
+		bool Write_VP(const uint16_t _Address, const char *_Data);
 
 	private:
 
