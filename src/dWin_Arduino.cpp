@@ -328,6 +328,24 @@ bool dwin::Set_HMI_Pressure_Plot(uint8_t _Value) {
 	return(true);
 
 }
+bool dwin::Set_HMI_Page(uint8_t _Page_ID) {
+
+	// Control for Limits
+	if (_Page_ID < 0) return(false);
+
+	// Declare Default Data Array
+	char Data[4] = {0x5A, 0x01, 0x00, 0x00};
+
+	// Set Data Low/High Byte
+	Data[3] = _Page_ID;
+
+	// Send Data Pack
+	Write_VP(Page_Value_Address, POINTER, Data, sizeof(Data));
+
+	// End Function
+	return(true);
+
+}
 
 // Private Functions
 bool dwin::Write_VP(const uint16_t _Address, uint8_t _Data_Type, char *_Data, uint8_t _Size) {

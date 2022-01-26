@@ -8,6 +8,10 @@ void setup() {
 
 void loop() {
 
+
+	// Set Page Main
+	LCD.Set_HMI_Page(0x00);
+
 	// Set Battery Icon
 	LCD.Set_HMI_Battery_Icon(2);
 
@@ -20,26 +24,38 @@ void loop() {
 	// Set Text Message
 	LCD.Set_HMI_Footer_Message(String(millis()));
 	
+	// Loop Delay
+	delay(1000);
+
+	// Set Page Voltage
+	LCD.Set_HMI_Page(0x01);
+
 	// Set Voltage
 	LCD.Set_HMI_Voltage('R', 190.32);
 	LCD.Set_HMI_Voltage('S', 218.35);
 	LCD.Set_HMI_Voltage('T', 240.33);
 
 	// Set Current
-	LCD.Set_HMI_Current('R', 203);
-	LCD.Set_HMI_Current('S', 204);
-	LCD.Set_HMI_Current('T', 205);
+	LCD.Set_HMI_Current('R', 20.3);
+	LCD.Set_HMI_Current('S', 20.4);
+	LCD.Set_HMI_Current('T', 2.5);
 
 	// Set Frequency
-	LCD.Set_HMI_Frequency(523);
+	LCD.Set_HMI_Frequency(random(50.30));
 
 	// Set Power Factor
-	LCD.Set_HMI_PowerFactor(503);
+	LCD.Set_HMI_PowerFactor(0.8);
+
+	// Loop Delay
+	delay(1000);
+
+	// Set Page Pressure
+	LCD.Set_HMI_Page(0x02);
 
 	// Set Pressure
 	LCD.Set_HMI_Pressure_Plot(random(15, 25));
 
 	// Loop Delay
-	delay(250);
+	delay(1000);
 
 }
