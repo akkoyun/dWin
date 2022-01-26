@@ -38,6 +38,7 @@ class dwin {
 		bool Set_HMI_Frequency(float _Value);
 		bool Set_HMI_PowerFactor(float _Value);
 		bool Set_HMI_Pressure_Plot(uint8_t _Value);
+		bool Set_HMI_Page(uint8_t _Page_ID);
 
 	private:
 
@@ -74,6 +75,9 @@ class dwin {
 
 		// Power Factor Data Value Address
 		const uint16_t Power_Factor_Value_Address = 0x2023;
+
+		// Page Value Address
+		const uint16_t Page_Value_Address = 0x0084;
 
 		// Color Constants
 		char Color_Black[2] = {0x00, 0x00};
