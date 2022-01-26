@@ -13,8 +13,9 @@
 // Global Functions
 bool dwin::Set_HMI_Battery_Icon(uint8_t _Level) {
 
-	// Declare Address
-	uint16_t _Address = 0x2000;
+	// Control for Limits
+	if (_Level < 0) return(false);
+	if (_Level > 5) return(false);
 
 	// Declare Default Data Array
 	char Data[] = {0x00, 0x00};
@@ -60,7 +61,7 @@ bool dwin::Set_HMI_Battery_Icon(uint8_t _Level) {
 	}
 	
 	// Send Data Pack
-	Write_VP(_Address, POINTER, Data, sizeof(Data));
+	Write_VP(Battery_Value_Address, POINTER, Data, sizeof(Data));
 
 	// End Function
 	return(true);
@@ -68,8 +69,9 @@ bool dwin::Set_HMI_Battery_Icon(uint8_t _Level) {
 }
 bool dwin::Set_HMI_GSM_Icon(uint8_t _Level) {
 
-	// Declare Address
-	uint16_t _Address = 0x2001;
+	// Control for Limits
+	if (_Level < 0) return(false);
+	if (_Level > 5) return(false);
 
 	// Declare Default Data Array
 	char Data[] = {0x00, 0x00};
@@ -115,16 +117,13 @@ bool dwin::Set_HMI_GSM_Icon(uint8_t _Level) {
 	}
 	
 	// Send Data Pack
-	Write_VP(_Address, POINTER, Data, sizeof(Data));
+	Write_VP(GSM_Value_Address, POINTER, Data, sizeof(Data));
 
 	// End Function
 	return(true);
 
 }
 bool dwin::Set_HMI_Time_Stamp(uint8_t _Day, uint8_t _Month, uint8_t _Year, uint8_t _Hour, uint8_t _Minute, uint8_t _Second) {
-
-	// Declare Address
-	uint16_t _Address = 0x0010;
 
 	// Declare Default Data Array
 	char Data[] = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
@@ -138,16 +137,13 @@ bool dwin::Set_HMI_Time_Stamp(uint8_t _Day, uint8_t _Month, uint8_t _Year, uint8
 	Data[5] = _Minute;
 
 	// Send Data Pack
-	Write_VP(_Address, POINTER, Data, sizeof(Data));
+	Write_VP(Time_Value_Address, POINTER, Data, sizeof(Data));
 
 	// End Function
 	return(true);
 
 }
 bool dwin::Set_HMI_Footer_Message(const String _Message) {
-
-	// Declare Address
-	uint16_t _Address = 0x1800;
 
 	// Declare Data Variable
 	char _Data[20];
@@ -156,53 +152,61 @@ bool dwin::Set_HMI_Footer_Message(const String _Message) {
 	_Message.toCharArray(_Data, 20);
 
 	// Send Data Pack
-	Write_VP(_Address, TEXT, _Data, sizeof(_Data));
+	Write_VP(Text_Value_Address, TEXT, _Data, sizeof(_Data));
 
 	// End Function
 	return(true);
 
 }
-bool dwin::Set_HMI_Voltage(char _Phase, uint16_t _Value) {
+bool dwin::Set_HMI_Voltage(char _Phase, float _Value) {
+
+	// Control for Limits
+	if (_Value < 0) return(false);
 
 	// Declare Address
 	uint16_t _Address_Data;
 	uint16_t _Address_Color;
 
 	// Declare Default Data Array
-	char Data[] = {0x00, 0x05};
+	char Data[2] = {0x00, 0x00};
 
-	// Set Address Low Byte
-	Data[1] = (_Value & (uint16_t)0x00FF);
+	// Convert Value
+	uint16_t _Value_RAW = uint16_t(_Value * 100);
 
-	// Get Address High Byte
-	Data[0]  = ((_Value & (uint16_t)0xFF00) >> 8);
+	// Set Data Low/High Byte
+	Data[1] = (_Value_RAW & (uint16_t)0x00FF);
+	Data[0]  = ((_Value_RAW & (uint16_t)0xFF00) >> 8);
 
 	// Define Address
 	switch (_Phase) {
 	case 'R':
 		
-		_Address_Data = 0x2009;
-		_Address_Color = 0xEE03;
+		_Address_Data = Voltage_R_Value_Address;
+		_Address_Color = Voltage_R_Color_Address;
 		break;
 
 	case 'S':
 		
-		_Address_Data = 0x200A;
-		_Address_Color = 0xED03;
+		_Address_Data = Voltage_S_Value_Address;
+		_Address_Color = Voltage_S_Color_Address;
 		break;
 
 	case 'T':
 		
-		_Address_Data = 0x200B;
-		_Address_Color = 0xEC03;
+		_Address_Data = Voltage_T_Value_Address;
+		_Address_Color = Voltage_T_Color_Address;
 		break;
 	
 	default:
+
+		// End Function
+		return(false);
+
 		break;
 	}
 
 	// Decide Colour
-	if ((int)_Value > 25300 || (int)_Value < 19200) Write_VP(_Address_Color, POINTER, Color_Red, sizeof(Color_Red));
+	if ((uint16_t)_Value_RAW > (uint16_t)25300 || (uint16_t)_Value_RAW < (uint16_t)19200) Write_VP(_Address_Color, POINTER, Color_Red, sizeof(Color_Red));
 	
 	// Send Data Pack
 	Write_VP(_Address_Data, POINTER, Data, sizeof(Data));
@@ -211,35 +215,39 @@ bool dwin::Set_HMI_Voltage(char _Phase, uint16_t _Value) {
 	return(true);
 
 }
-bool dwin::Set_HMI_Current(char _Phase, uint16_t _Value) {
+bool dwin::Set_HMI_Current(char _Phase, float _Value) {
+
+	// Control for Limits
+	if (_Value < 0) return(false);
 
 	// Declare Address
 	uint16_t _Address;
 
 	// Declare Default Data Array
-	char Data[] = {0x00, 0x05};
+	char Data[] = {0x00, 0x00};
 
-	// Set Address Low Byte
-	Data[1] = (_Value & (uint16_t)0x00FF);
+	// Convert Value
+	uint16_t _Value_RAW = uint16_t(_Value * 10);
 
-	// Get Address High Byte
-	Data[0]  = ((_Value & (uint16_t)0xFF00) >> 8);
+	// Set Data Low/High Byte
+	Data[1] = (_Value_RAW & (uint16_t)0x00FF);
+	Data[0]  = ((_Value_RAW & (uint16_t)0xFF00) >> 8);
 
 	// Define Address
 	switch (_Phase) {
 	case 'R':
 		
-		_Address = 0x200C;
+		_Address = Current_R_Value_Address;
 		break;
 
 	case 'S':
 		
-		_Address = 0x200D;
+		_Address = Current_S_Value_Address;
 		break;
 
 	case 'T':
 		
-		_Address = 0x200E;
+		_Address = Current_T_Value_Address;
 		break;
 	
 	default:
@@ -253,47 +261,49 @@ bool dwin::Set_HMI_Current(char _Phase, uint16_t _Value) {
 	return(true);
 
 }
-bool dwin::Set_HMI_Frequency(uint16_t _Value) {
+bool dwin::Set_HMI_Frequency(float _Value) {
 
-	// Declare Address
-	uint16_t _Address = 0x200F;
-	uint16_t _Address_Color = 0xE803;
+	// Control for Limits
+	if (_Value < 0) return(false);
 
 	// Declare Default Data Array
-	char Data[] = {0x00, 0x05};
+	char Data[] = {0x00, 0x00};
 
-	// Set Address Low Byte
-	Data[1] = (_Value & (uint16_t)0x00FF);
+	// Convert Value
+	uint16_t _Value_RAW = uint16_t(_Value * 10);
 
-	// Get Address High Byte
-	Data[0]  = ((_Value & (uint16_t)0xFF00) >> 8);
+	// Set Data Low/High Byte
+	Data[1] = (_Value_RAW & (uint16_t)0x00FF);
+	Data[0]  = ((_Value_RAW & (uint16_t)0xFF00) >> 8);
 
 	// Decide Colour
-	if ((int)_Value > 510 || (int)_Value < 490) Write_VP(_Address_Color, POINTER, Color_Red, sizeof(Color_Red));
+	if ((uint16_t)_Value_RAW > (uint16_t)510 || (uint16_t)_Value_RAW < (uint16_t)490) Write_VP(Frequency_Color_Address, POINTER, Color_Red, sizeof(Color_Red));
 
 	// Send Data Pack
-	Write_VP(_Address, POINTER, Data, sizeof(Data));
+	Write_VP(Frequency_Value_Address, POINTER, Data, sizeof(Data));
 
 	// End Function
 	return(true);
 
 }
-bool dwin::Set_HMI_PowerFactor(uint16_t _Value) {
+bool dwin::Set_HMI_PowerFactor(float _Value) {
 
-	// Declare Address
-	uint16_t _Address = 0x2023;
+	// Control for Limits
+	if (_Value < -1) return(false);
+	if (_Value > 1) return(false);
 
 	// Declare Default Data Array
-	char Data[] = {0x00, 0x05};
+	char Data[] = {0x00, 0x00};
 
-	// Set Address Low Byte
-	Data[1] = (_Value & (uint16_t)0x00FF);
+	// Convert Value
+	uint16_t _Value_RAW = uint16_t(_Value * 100);
 
-	// Get Address High Byte
-	Data[0]  = ((_Value & (uint16_t)0xFF00) >> 8);
+	// Set Data Low/High Byte
+	Data[1] = (_Value_RAW & (uint16_t)0x00FF);
+	Data[0]  = ((_Value_RAW & (uint16_t)0xFF00) >> 8);
 
 	// Send Data Pack
-	Write_VP(_Address, POINTER, Data, sizeof(Data));
+	Write_VP(Power_Factor_Value_Address, POINTER, Data, sizeof(Data));
 
 	// End Function
 	return(true);
@@ -332,36 +342,36 @@ bool dwin::Write_VP(const uint16_t _Address, uint8_t _Data_Type, char *_Data, ui
 	uint8_t _Pack_Length = _Size + 3;
 
 	// Set Pack Header
-	Serial.write(0x5A);
+	HMI_Serial.write(0x5A);
 	delay(1);
-	Serial.write(0xA5);
+	HMI_Serial.write(0xA5);
 	delay(1);
-	Serial.write(_Pack_Length);
+	HMI_Serial.write(_Pack_Length);
 	delay(1);
-	Serial.write(0x82);
+	HMI_Serial.write(0x82);
 	delay(1);
-	Serial.write(_Address_High);
+	HMI_Serial.write(_Address_High);
 	delay(1);
-	Serial.write(_Address_Low);
+	HMI_Serial.write(_Address_Low);
 	delay(1);
 
 	// Control for Data Type
 	if (_Data_Type == TEXT) {
 
 		// Text Defination	
-		Serial.write(0xA1);
-		Serial.write(0x00);
-		Serial.write(0x30);
-		Serial.write(0x03);
-		Serial.write(0x01);
-		Serial.write(0xDF);
+		HMI_Serial.write(0xA1);
+		HMI_Serial.write(0x00);
+		HMI_Serial.write(0x30);
+		HMI_Serial.write(0x03);
+		HMI_Serial.write(0x01);
+		HMI_Serial.write(0xDF);
 
 	}
 
 	// Send Pack
 	for (uint8_t i = 0; i < _Size; i++) {
 		
-		Serial.write(_Data[i]);
+		HMI_Serial.write(_Data[i]);
 		delay(1);
 
 	}

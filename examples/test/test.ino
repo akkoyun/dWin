@@ -2,7 +2,7 @@
 
 void setup() {
 
-	Serial.begin(115200);
+	HMI_Serial.begin(HMI_Serial_Baud);
 
 }
 
@@ -21,9 +21,9 @@ void loop() {
 	LCD.Set_HMI_Footer_Message(String(millis()));
 	
 	// Set Voltage
-	LCD.Set_HMI_Voltage('R', 19055);
-	LCD.Set_HMI_Voltage('S', 25500);
-	LCD.Set_HMI_Voltage('T', 22005);
+	LCD.Set_HMI_Voltage('R', 190.32);
+	LCD.Set_HMI_Voltage('S', 218.35);
+	LCD.Set_HMI_Voltage('T', 240.33);
 
 	// Set Current
 	LCD.Set_HMI_Current('R', 203);
