@@ -11,6 +11,12 @@
 #include <dWin_Arduino.h>
 
 // Global Functions
+bool dwin::Set_HMI_Begin(void) {
+
+	// Serial Begin
+	HMI_Serial.begin(HMI_Serial_Baud);
+
+}
 bool dwin::Set_HMI_Battery_Icon(uint8_t _Level) {
 
 	// Control for Limits
@@ -71,7 +77,7 @@ bool dwin::Set_HMI_GSM_Icon(uint8_t _Level) {
 
 	// Control for Limits
 	if (_Level < 0) return(false);
-	if (_Level > 5) return(false);
+	if (_Level > 6) return(false);
 
 	// Declare Default Data Array
 	char Data[] = {0x00, 0x00};
@@ -108,6 +114,11 @@ bool dwin::Set_HMI_GSM_Icon(uint8_t _Level) {
 		Data[1] = 0x05;
 		break;
 	
+	case 6:
+		
+		Data[1] = 0x06;
+		break;
+
 	default:
 
 		// End Function
@@ -126,15 +137,15 @@ bool dwin::Set_HMI_GSM_Icon(uint8_t _Level) {
 bool dwin::Set_HMI_Time_Stamp(uint8_t _Day, uint8_t _Month, uint8_t _Year, uint8_t _Hour, uint8_t _Minute, uint8_t _Second) {
 
 	// Declare Default Data Array
-	char Data[] = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
+	char Data[8] = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
 
 	// Set Array Values
 	Data[0] = _Year;
 	Data[1] = _Month;
 	Data[2] = _Day;
-	Data[3] = _Second;
 	Data[4] = _Hour;
 	Data[5] = _Minute;
+	Data[6] = _Second;
 
 	// Send Data Pack
 	Write_VP(Time_Value_Address, POINTER, Data, sizeof(Data));
@@ -341,6 +352,26 @@ bool dwin::Set_HMI_Page(uint8_t _Page_ID) {
 
 	// Send Data Pack
 	Write_VP(Page_Value_Address, POINTER, Data, sizeof(Data));
+
+	// End Function
+	return(true);
+
+}
+bool dwin::Set_HMI_Sleep(bool _Status) {
+
+	// Data[0] - ON State Brightnes
+	// Data[1] - Sleep State Brightnes
+	// Data[2] - Sleep Time
+	// Data[3] - Sleep Time
+	
+	// Declare Default Data Array
+	char Data[4] = {0x64, 0x64, 0x0B, 0xB8};
+
+	// Sleep State ON
+	if (_Status) Data[1] = 0x00;
+		
+	// Send Data Pack
+	Write_VP(Sleep_Value_Address, POINTER, Data, sizeof(Data));
 
 	// End Function
 	return(true);

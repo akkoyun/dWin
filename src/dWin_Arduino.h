@@ -16,7 +16,7 @@
 #include <Arduino.h>
 #endif
 
-#define HMI_Serial Serial
+#define HMI_Serial Serial1
 #define	HMI_Serial_Baud 115200
 
 class dwin {
@@ -29,6 +29,8 @@ class dwin {
 			PRESSURE					= 2					// 2
 		};
 
+		bool Set_HMI_Begin(void);
+
 		bool Set_HMI_Battery_Icon(uint8_t _Level);
 		bool Set_HMI_GSM_Icon(uint8_t _Level);
 		bool Set_HMI_Time_Stamp(uint8_t _Day, uint8_t _Month, uint8_t _Year, uint8_t _Hour, uint8_t _Minute, uint8_t _Second);
@@ -39,6 +41,7 @@ class dwin {
 		bool Set_HMI_PowerFactor(float _Value);
 		bool Set_HMI_Pressure_Plot(uint8_t _Value);
 		bool Set_HMI_Page(uint8_t _Page_ID);
+		bool Set_HMI_Sleep(bool _Status);
 
 	private:
 
@@ -78,6 +81,9 @@ class dwin {
 
 		// Page Value Address
 		const uint16_t Page_Value_Address = 0x0084;
+
+		// LCD Sleep Address
+		const uint16_t Sleep_Value_Address = 0x0082;
 
 		// Color Constants
 		char Color_Black[2] = {0x00, 0x00};
