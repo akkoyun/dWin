@@ -129,7 +129,7 @@ class dwin {
 		const uint16_t Power_Factor_Value_Address = 0x6012;
 
 		// Pressure Data Value Address
-		const uint16_t Pressure_Value_Address = 0x600B;
+		const uint16_t Pressure_Value_Address = 0x6014;
 		const uint16_t Pressure_Color_Address = 0x7093;
 
 		// Page Value Address
