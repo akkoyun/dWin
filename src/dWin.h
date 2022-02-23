@@ -8,8 +8,8 @@
  *
  *********************************************************************************/
 
-#ifndef __dWin_Arduino__
-#define __dWin_Arduino__
+#ifndef __dWin__
+#define __dWin__
 
 // Define Arduino Library
 #ifndef __Arduino__

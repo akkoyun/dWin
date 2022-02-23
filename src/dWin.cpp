@@ -8,7 +8,7 @@
  *
  *********************************************************************************/
 
-#include <dWin_Arduino.h>
+#include <dWin.h>
 
 // Global Functions
 bool dwin::Set_HMI_Begin(void) {

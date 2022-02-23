@@ -1,4 +1,4 @@
-#include <dWin_Arduino.h>
+#include <dWin.h>
 
 void setup() {
 
@@ -51,9 +51,6 @@ void loop() {
 
 	// Set Page Pressure
 	LCD.Set_HMI_Page(0x02);
-
-	// Set Pressure
-	LCD.Set_HMI_Pressure_Plot(random(15, 25));
 
 	// Loop Delay
 	delay(1000);
