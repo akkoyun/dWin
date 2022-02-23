@@ -6,6 +6,8 @@
 
 ---
 
+![dWin HMI](https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQxnYnBFWXAB-ot58jd8DU3_OkfrfwudsnjAQ&usqp=CAU)
+
 dWin is a Human Machine Interface （HMI） solution combining an onboard processor and memory touch display with DGUS Editor software for HMI GUI project development.
 
 Using the DGUS Editor software, you can quickly develop the HMI GUI by drag-and-drop components (graphics, text, button, slider, etc.) and ASCII text-based instructions for coding how components interact on the display side.
