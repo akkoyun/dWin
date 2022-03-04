@@ -779,6 +779,28 @@ bool dwin::Set_HMI_Sleep(bool _Status) {
 
 }
 
+// Energy Parameters
+bool dwin::Set_HMI_Energy(uint16_t _Value) {
+
+	// Control for Limits
+	if (_Value < 0) return(false);
+
+	// Declare Default Data Array
+	char Data[2] = {0x00, 0x00};
+
+	// Set Data Low/High Byte
+	Data[1] = (_Value & (uint16_t)0x00FF);
+	Data[0]  = ((_Value & (uint16_t)0xFF00) >> 8);
+	
+	// Send Data Pack
+	Write_VP(Energy_Value_Address, POINTER, Data, sizeof(Data));
+
+	// End Function
+	return(true);
+
+}
+
+
 // Private Functions
 bool dwin::Write_VP(const uint16_t _Address, uint8_t _Data_Type, char *_Data, uint8_t _Size) {
 

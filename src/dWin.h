@@ -69,6 +69,9 @@ class dwin {
 		bool Set_HMI_Frequency(float _Value);
 		bool Set_HMI_PowerFactor(float _Value);
 		
+		// Energy Functions
+		bool Set_HMI_Energy(uint16_t _Value);
+
 		// Pressure Functions
 		bool Set_HMI_Pressure(float _Value);
 
@@ -137,6 +140,9 @@ class dwin {
 
 		// LCD Sleep Address
 		const uint16_t Sleep_Value_Address = 0x0082;
+
+		// LCD Energy RAM Address
+		const uint16_t Energy_Value_Address = 0x602D;
 
 		// Color Constants
 		char Color_Black[2] = {0x00, 0x00};
