@@ -77,81 +77,14 @@ class dwin {
 
 	private:
 
-		// Battery Address
-		const uint16_t Battery_Value_Address = 0x6002;
-		const uint16_t Battery_IV_Value_Address = 0x6016;
-		const uint16_t Battery_IV_Color_Address = 0x70B3;
-		const uint16_t Battery_T_Value_Address = 0x6018;
-		const uint16_t Battery_T_Color_Address = 0x70C3;
-		const uint16_t Battery_AC_Value_Address = 0x601A;
-		const uint16_t Battery_AC_Color_Address = 0x70D3;
-		const uint16_t Battery_SOC_Value_Address = 0x601C;
-		const uint16_t Battery_FB_Value_Address = 0x601E;
-		const uint16_t Battery_IB_Value_Address = 0x6020;
-		const uint16_t Battery_CYC_Value_Address = 0x6022;
-
-		// GSM Icon Image Value Address
-		const uint16_t GSM_Value_Address = 0x6001;
-		const uint16_t GSM_Manufacturer_Value_Address = 0x6024;
-		const uint16_t GSM_Model_Value_Address = 0x6026;
-		const uint16_t GSM_Conn_Value_Address = 0x6028;
-		const uint16_t GSM_RSSI_Value_Address = 0x602A;
-		const uint16_t GSM_Operator_Value_Address = 0x602C;
-		const uint16_t GSM_Firmware_Text_Address = 0x6030;
-		const uint16_t GSM_IMEI_Text_Address = 0x6040;
-		const uint16_t GSM_Serial_Text_Address = 0x6050;
-		const uint16_t GSM_ICCID_Text_Address = 0x6060;
-		const uint16_t GSM_IP_Text_Address = 0x6070;
-
-		// Time Data Value Address
-		const uint16_t Time_Value_Address = 0x0010;
-
-		// Text Data Value Address
-		const uint16_t Text_Value_Address = 0x6080;
-
-		// Voltage Data Value Address
-		const uint16_t Voltage_R_Value_Address = 0x6004;
-		const uint16_t Voltage_S_Value_Address = 0x6006;
-		const uint16_t Voltage_T_Value_Address = 0x6008;
-
-		// Voltage Data Color Value Address
-		const uint16_t Voltage_R_Color_Address = 0x7013;
-		const uint16_t Voltage_S_Color_Address = 0x7023;
-		const uint16_t Voltage_T_Color_Address = 0x7033;
-
-		// Current Data Value Address
-		const uint16_t Current_R_Value_Address = 0x610A;
-		const uint16_t Current_S_Value_Address = 0x610C;
-		const uint16_t Current_T_Value_Address = 0x610E;
-
-		// Frequency Data Value Address
-		const uint16_t Frequency_Value_Address = 0x6010;
-		const uint16_t Frequency_Color_Address = 0x7073;
-
-		// Power Factor Data Value Address
-		const uint16_t Power_Factor_Value_Address = 0x6012;
-
-		// Pressure Data Value Address
-		const uint16_t Pressure_Value_Address = 0x6014;
-		const uint16_t Pressure_Color_Address = 0x7093;
-
-		// Page Value Address
-		const uint16_t Page_Value_Address = 0x0084;
-
-		// LCD Sleep Address
-		const uint16_t Sleep_Value_Address = 0x0082;
-
-		// LCD Energy RAM Address
-		const uint16_t Energy_Value_Address = 0x602D;
-
 		// Color Constants
-		char Color_Black[2] = {0x00, 0x00};
-		char Color_White[2] = {0xFF, 0xFF};
-		char Color_Red[2] = {0xF8, 0x00};
-		char Color_Green[2] = {0x07, 0x40};
-		char Color_Gray[2] = {0xAD, 0x55};
+		const char Color_Black[2] = {0x00, 0x00};
+		const char Color_White[2] = {0xFF, 0xFF};
+		const char Color_Red[2] = {0xF8, 0x00};
+		const char Color_Green[2] = {0x07, 0x40};
+		const char Color_Gray[2] = {0xAD, 0x55};
 
-		bool Write_VP(const uint16_t _Address, uint8_t _Data_Type, char *_Data, uint8_t _Size);
+		bool Write_VP(const uint16_t _Address, uint8_t _Data_Type, const char *_Data, uint8_t _Size);
 
 };
 

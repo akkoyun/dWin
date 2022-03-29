@@ -96,7 +96,7 @@ bool dwin::Set_HMI_Battery_Icon(uint8_t _Level) {
 	}
 	
 	// Send Data Pack
-	Write_VP(Battery_Value_Address, POINTER, Data, sizeof(Data));
+	Write_VP(0x6002, POINTER, Data, sizeof(Data));
 
 	// End Function
 	return(true);
@@ -108,12 +108,12 @@ bool dwin::Set_HMI_Battery_IV(float _Value) {
 	if (_Value > 0) {
 		
 		// Decide Colour
-		Write_VP(Battery_IV_Color_Address, POINTER, Color_White, sizeof(Color_White));
+		Write_VP(0x70B3, POINTER, Color_White, sizeof(Color_White));
 
 	} else {
 
 		// Decide Colour
-		Write_VP(Battery_IV_Color_Address, POINTER, Color_Red, sizeof(Color_Red));
+		Write_VP(0x70B3, POINTER, Color_Red, sizeof(Color_Red));
 
 		// Set Absolute
 		_Value *= -1;
@@ -131,7 +131,7 @@ bool dwin::Set_HMI_Battery_IV(float _Value) {
 	Data[0]  = ((_Value_RAW & (uint16_t)0xFF00) >> 8);
 
 	// Send Data Pack
-	Write_VP(Battery_IV_Value_Address, POINTER, Data, sizeof(Data));
+	Write_VP(0x6016, POINTER, Data, sizeof(Data));
 
 	// End Function
 	return(true);
@@ -143,12 +143,12 @@ bool dwin::Set_HMI_Battery_T(float _Value) {
 	if (_Value > 0) {
 		
 		// Decide Colour
-		Write_VP(Battery_T_Color_Address, POINTER, Color_White, sizeof(Color_White));
+		Write_VP(0x70C3, POINTER, Color_White, sizeof(Color_White));
 
 	} else {
 
 		// Decide Colour
-		Write_VP(Battery_T_Color_Address, POINTER, Color_Red, sizeof(Color_Red));
+		Write_VP(0x70C3, POINTER, Color_Red, sizeof(Color_Red));
 
 		// Set Absolute
 		_Value *= -1;
@@ -166,7 +166,7 @@ bool dwin::Set_HMI_Battery_T(float _Value) {
 	Data[0]  = ((_Value_RAW & (uint16_t)0xFF00) >> 8);
 
 	// Send Data Pack
-	Write_VP(Battery_T_Value_Address, POINTER, Data, sizeof(Data));
+	Write_VP(0x6018, POINTER, Data, sizeof(Data));
 
 	// End Function
 	return(true);
@@ -178,12 +178,12 @@ bool dwin::Set_HMI_Battery_AC(float _Value) {
 	if (_Value > 0) {
 		
 		// Decide Colour
-		Write_VP(Battery_AC_Color_Address, POINTER, Color_White, sizeof(Color_White));
+		Write_VP(0x70D3, POINTER, Color_White, sizeof(Color_White));
 
 	} else {
 
 		// Decide Colour
-		Write_VP(Battery_AC_Color_Address, POINTER, Color_Red, sizeof(Color_Red));
+		Write_VP(0x70D3, POINTER, Color_Red, sizeof(Color_Red));
 
 		// Set Absolute
 		_Value *= -1;
@@ -201,7 +201,7 @@ bool dwin::Set_HMI_Battery_AC(float _Value) {
 	Data[0]  = ((_Value_RAW & (uint16_t)0xFF00) >> 8);
 
 	// Send Data Pack
-	Write_VP(Battery_AC_Value_Address, POINTER, Data, sizeof(Data));
+	Write_VP(0x601A, POINTER, Data, sizeof(Data));
 
 	// End Function
 	return(true);
@@ -223,7 +223,7 @@ bool dwin::Set_HMI_Battery_SOC(float _Value) {
 	Data[0]  = ((_Value_RAW & (uint16_t)0xFF00) >> 8);
 	
 	// Send Data Pack
-	Write_VP(Battery_SOC_Value_Address, POINTER, Data, sizeof(Data));
+	Write_VP(0x601C, POINTER, Data, sizeof(Data));
 
 	// End Function
 	return(true);
@@ -242,7 +242,7 @@ bool dwin::Set_HMI_Battery_FB(uint16_t _Value) {
 	Data[0]  = ((_Value & (uint16_t)0xFF00) >> 8);
 	
 	// Send Data Pack
-	Write_VP(Battery_FB_Value_Address, POINTER, Data, sizeof(Data));
+	Write_VP(0x601E, POINTER, Data, sizeof(Data));
 
 	// End Function
 	return(true);
@@ -261,7 +261,7 @@ bool dwin::Set_HMI_Battery_IB(uint16_t _Value) {
 	Data[0]  = ((_Value & (uint16_t)0xFF00) >> 8);
 	
 	// Send Data Pack
-	Write_VP(Battery_IB_Value_Address, POINTER, Data, sizeof(Data));
+	Write_VP(0x6020, POINTER, Data, sizeof(Data));
 
 	// End Function
 	return(true);
@@ -340,7 +340,7 @@ bool dwin::Set_HMI_GSM_Icon(uint8_t _Level) {
 	}
 	
 	// Send Data Pack
-	Write_VP(GSM_Value_Address, POINTER, Data, sizeof(Data));
+	Write_VP(0x6001, POINTER, Data, sizeof(Data));
 
 	// End Function
 	return(true);
@@ -359,7 +359,7 @@ bool dwin::Set_HMI_GSM_Manufacturer(uint8_t _Value) {
 	Data[0]  = ((_Value & (uint16_t)0xFF00) >> 8);
 
 	// Send Data Pack
-	Write_VP(GSM_Manufacturer_Value_Address, POINTER, Data, sizeof(Data));
+	Write_VP(0x6024, POINTER, Data, sizeof(Data));
 
 	// End Function
 	return(true);
@@ -378,7 +378,7 @@ bool dwin::Set_HMI_GSM_Model(uint8_t _Value) {
 	Data[0]  = ((_Value & (uint16_t)0xFF00) >> 8);
 
 	// Send Data Pack
-	Write_VP(GSM_Model_Value_Address, POINTER, Data, sizeof(Data));
+	Write_VP(0x6026, POINTER, Data, sizeof(Data));
 
 	// End Function
 	return(true);
@@ -397,7 +397,7 @@ bool dwin::Set_HMI_GSM_Connection_Time(uint16_t _Value) {
 	Data[0]  = ((_Value & (uint16_t)0xFF00) >> 8);
 
 	// Send Data Pack
-	Write_VP(GSM_Conn_Value_Address, POINTER, Data, sizeof(Data));
+	Write_VP(0x6028, POINTER, Data, sizeof(Data));
 
 	// End Function
 	return(true);
@@ -416,7 +416,7 @@ bool dwin::Set_HMI_GSM_RSSI(uint16_t _Value) {
 	Data[0]  = ((_Value & (uint16_t)0xFF00) >> 8);
 
 	// Send Data Pack
-	Write_VP(GSM_RSSI_Value_Address, POINTER, Data, sizeof(Data));
+	Write_VP(0x602A, POINTER, Data, sizeof(Data));
 
 	// End Function
 	return(true);
@@ -435,7 +435,7 @@ bool dwin::Set_HMI_GSM_Operator(uint16_t _Value) {
 	Data[0]  = ((_Value & (uint16_t)0xFF00) >> 8);
 
 	// Send Data Pack
-	Write_VP(GSM_Operator_Value_Address, POINTER, Data, sizeof(Data));
+	Write_VP(0x602C, POINTER, Data, sizeof(Data));
 
 	// End Function
 	return(true);
@@ -450,7 +450,7 @@ bool dwin::Set_HMI_GSM_Firmware(const String _Message) {
 	_Message.toCharArray(_Data, 20);
 
 	// Send Data Pack
-	Write_VP(GSM_Firmware_Text_Address, POINTER, _Data, sizeof(_Data));
+	Write_VP(0x6030, POINTER, _Data, sizeof(_Data));
 
 	// End Function
 	return(true);
@@ -465,7 +465,7 @@ bool dwin::Set_HMI_GSM_IMEI(const String _Message) {
 	_Message.toCharArray(_Data, 20);
 
 	// Send Data Pack
-	Write_VP(GSM_IMEI_Text_Address, POINTER, _Data, sizeof(_Data));
+	Write_VP(0x6040, POINTER, _Data, sizeof(_Data));
 
 	// End Function
 	return(true);
@@ -480,7 +480,7 @@ bool dwin::Set_HMI_GSM_Serial(const String _Message) {
 	_Message.toCharArray(_Data, 20);
 
 	// Send Data Pack
-	Write_VP(GSM_Serial_Text_Address, POINTER, _Data, sizeof(_Data));
+	Write_VP(0x6050, POINTER, _Data, sizeof(_Data));
 
 	// End Function
 	return(true);
@@ -495,7 +495,7 @@ bool dwin::Set_HMI_GSM_ICCID(const String _Message) {
 	_Message.toCharArray(_Data, 20);
 
 	// Send Data Pack
-	Write_VP(GSM_ICCID_Text_Address, POINTER, _Data, sizeof(_Data));
+	Write_VP(0x6060, POINTER, _Data, sizeof(_Data));
 
 	// End Function
 	return(true);
@@ -510,7 +510,7 @@ bool dwin::Set_HMI_GSM_IP(const String _Message) {
 	_Message.toCharArray(_Data, 20);
 
 	// Send Data Pack
-	Write_VP(GSM_IP_Text_Address, POINTER, _Data, sizeof(_Data));
+	Write_VP(0x6070, POINTER, _Data, sizeof(_Data));
 
 	// End Function
 	return(true);
@@ -532,7 +532,7 @@ bool dwin::Set_HMI_Time_Stamp(uint8_t _Day, uint8_t _Month, uint8_t _Year, uint8
 	Data[6] = _Second;
 
 	// Send Data Pack
-	Write_VP(Time_Value_Address, POINTER, Data, sizeof(Data));
+	Write_VP(0x0010, POINTER, Data, sizeof(Data));
 
 	// End Function
 	return(true);
@@ -547,7 +547,7 @@ bool dwin::Set_HMI_Footer_Message(const String _Message) {
 	_Message.toCharArray(_Data, 20);
 
 	// Send Data Pack
-	Write_VP(Text_Value_Address, TEXT, _Data, sizeof(_Data));
+	Write_VP(0x6080, TEXT, _Data, sizeof(_Data));
 
 	// End Function
 	return(true);
@@ -576,20 +576,20 @@ bool dwin::Set_HMI_Voltage(char _Phase, float _Value) {
 	switch (_Phase) {
 	case 'R':
 		
-		_Address_Data = Voltage_R_Value_Address;
-		_Address_Color = Voltage_R_Color_Address;
+		_Address_Data = 0x6004;
+		_Address_Color = 0x7013;
 		break;
 
 	case 'S':
 		
-		_Address_Data = Voltage_S_Value_Address;
-		_Address_Color = Voltage_S_Color_Address;
+		_Address_Data = 0x6006;
+		_Address_Color = 0x7023;
 		break;
 
 	case 'T':
 		
-		_Address_Data = Voltage_T_Value_Address;
-		_Address_Color = Voltage_T_Color_Address;
+		_Address_Data = 0x6008;
+		_Address_Color = 0x7033;
 		break;
 	
 	default:
@@ -636,17 +636,17 @@ bool dwin::Set_HMI_Current(char _Phase, float _Value) {
 	switch (_Phase) {
 	case 'R':
 		
-		_Address = Current_R_Value_Address;
+		_Address = 0x610A;
 		break;
 
 	case 'S':
 		
-		_Address = Current_S_Value_Address;
+		_Address = 0x610C;
 		break;
 
 	case 'T':
 		
-		_Address = Current_T_Value_Address;
+		_Address = 0x610E;
 		break;
 	
 	default:
@@ -676,10 +676,10 @@ bool dwin::Set_HMI_Frequency(float _Value) {
 	Data[0]  = ((_Value_RAW & (uint16_t)0xFF00) >> 8);
 
 	// Decide Colour
-	if ((uint16_t)_Value_RAW > (uint16_t)510 || (uint16_t)_Value_RAW < (uint16_t)490) Write_VP(Frequency_Color_Address, POINTER, Color_Red, sizeof(Color_Red));
+	if ((uint16_t)_Value_RAW > (uint16_t)510 || (uint16_t)_Value_RAW < (uint16_t)490) Write_VP(0x7073, POINTER, Color_Red, sizeof(Color_Red));
 
 	// Send Data Pack
-	Write_VP(Frequency_Value_Address, POINTER, Data, sizeof(Data));
+	Write_VP(0x6010, POINTER, Data, sizeof(Data));
 
 	// End Function
 	return(true);
@@ -702,7 +702,7 @@ bool dwin::Set_HMI_PowerFactor(float _Value) {
 	Data[0]  = ((_Value_RAW & (uint16_t)0xFF00) >> 8);
 
 	// Send Data Pack
-	Write_VP(Power_Factor_Value_Address, POINTER, Data, sizeof(Data));
+	Write_VP(0x6012, POINTER, Data, sizeof(Data));
 
 	// End Function
 	return(true);
@@ -724,17 +724,17 @@ bool dwin::Set_HMI_Pressure(float _Value) {
 	if ((uint16_t)_Value_RAW > (uint16_t)14 || (uint16_t)_Value_RAW < (uint16_t)12) {
 
 		// Change Color to RED
-		Write_VP(Pressure_Color_Address, POINTER, Color_Red, sizeof(Color_Red));
+		Write_VP(0x7093, POINTER, Color_Red, sizeof(Color_Red));
 
 	} else {
 
 		// Change Color to White
-		Write_VP(Pressure_Color_Address, POINTER, Color_White, sizeof(Color_White));
+		Write_VP(0x7093, POINTER, Color_White, sizeof(Color_White));
 
 	}
 
 	// Send Data Pack
-	Write_VP(Pressure_Value_Address, POINTER, Data, sizeof(Data));
+	Write_VP(0x6014, POINTER, Data, sizeof(Data));
 
 	// End Function
 	return(true);
@@ -752,7 +752,7 @@ bool dwin::Set_HMI_Page(uint8_t _Page_ID) {
 	Data[3] = _Page_ID;
 
 	// Send Data Pack
-	Write_VP(Page_Value_Address, POINTER, Data, sizeof(Data));
+	Write_VP(0x0084, POINTER, Data, sizeof(Data));
 
 	// End Function
 	return(true);
@@ -772,7 +772,7 @@ bool dwin::Set_HMI_Sleep(bool _Status) {
 	if (_Status) Data[1] = 0x00;
 		
 	// Send Data Pack
-	Write_VP(Sleep_Value_Address, POINTER, Data, sizeof(Data));
+	Write_VP(0x0082, POINTER, Data, sizeof(Data));
 
 	// End Function
 	return(true);
@@ -793,16 +793,15 @@ bool dwin::Set_HMI_Energy(uint16_t _Value) {
 	Data[0]  = ((_Value & (uint16_t)0xFF00) >> 8);
 	
 	// Send Data Pack
-	Write_VP(Energy_Value_Address, POINTER, Data, sizeof(Data));
+	Write_VP(0x602D, POINTER, Data, sizeof(Data));
 
 	// End Function
 	return(true);
 
 }
 
-
 // Private Functions
-bool dwin::Write_VP(const uint16_t _Address, uint8_t _Data_Type, char *_Data, uint8_t _Size) {
+bool dwin::Write_VP(const uint16_t _Address, uint8_t _Data_Type, const char *_Data, uint8_t _Size) {
 
 	// Set Address Low Byte
 	uint8_t _Address_Low = (_Address & (uint16_t)0x00FF);
