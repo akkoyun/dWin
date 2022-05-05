@@ -1,56 +1,64 @@
 #include <dWin.h>
 
+// Set HMI Object
+dwin LCD;
+
 void setup() {
 
-	HMI_Serial.begin(HMI_Serial_Baud);
+	// Start Serial
+	Serial.begin(115200);
+
+	// Start HMI Serial
+	Serial1.begin(115200);
+
+	// Start LCD
+	LCD.Begin(Serial1);
+
+	// LCD Reset
+	LCD.Set_HMI_Reset();
+
+	// LCD boot Delay
+	delay(100);
+
+	Serial.println("Boot");
 
 }
 
 void loop() {
 
+	// Dont Sleep
+//	LCD.Set_HMI_Sleep(true);
 
-	// Set Page Main
-	LCD.Set_HMI_Page(0x00);
+	// Set Battery
+	LCD.Set_HMI_Battery(5, 3, 12, 13, 14, 15, 16);
 
-	// Set Battery Icon
-	LCD.Set_HMI_Battery_Icon(2);
-
-	// Set GSM Icon
-	LCD.Set_HMI_GSM_Icon(3);
-
-	// Set Time
-	LCD.Set_HMI_Time_Stamp(25, 1, 22, 16, 58, 0);
-	
-	// Set Text Message
-	LCD.Set_HMI_Footer_Message(String(millis()));
-	
-	// Loop Delay
-	delay(1000);
-
-	// Set Page Voltage
-	LCD.Set_HMI_Page(0x01);
+	// Set GSM
+	LCD.Set_HMI_GSM(2,1,1,12,22,1,"01.01.01", "12345678901234567890", "222222", "33333", "123.123.123.123");
 
 	// Set Voltage
-	LCD.Set_HMI_Voltage('R', 190.32);
-	LCD.Set_HMI_Voltage('S', 218.35);
-	LCD.Set_HMI_Voltage('T', 240.33);
+	LCD.Set_HMI_Voltage(1, random(220));
+	LCD.Set_HMI_Voltage(2, random(220));
+	LCD.Set_HMI_Voltage(3, random(220));
 
 	// Set Current
-	LCD.Set_HMI_Current('R', 20.3);
-	LCD.Set_HMI_Current('S', 20.4);
-	LCD.Set_HMI_Current('T', 2.5);
+	LCD.Set_HMI_Current(1, random(5));
+	LCD.Set_HMI_Current(2, random(5));
+	LCD.Set_HMI_Current(3, random(5));
 
 	// Set Frequency
-	LCD.Set_HMI_Frequency(random(50.30));
+	LCD.Set_HMI_Frequency(random(50));
 
 	// Set Power Factor
-	LCD.Set_HMI_PowerFactor(0.8);
+	LCD.Set_HMI_PowerFactor(random(1));
 
-	// Loop Delay
-	delay(1000);
+	// Set Pressure
+	LCD.Set_HMI_Pressure(random(10));
 
-	// Set Page Pressure
-	LCD.Set_HMI_Page(0x02);
+	// Set Time
+	LCD.Set_HMI_Time_Stamp(25, 1, 22, 16, (millis() % 60), 0);
+
+	// Status
+//	LCD.Set_HMI_Status(516);
 
 	// Loop Delay
 	delay(1000);
