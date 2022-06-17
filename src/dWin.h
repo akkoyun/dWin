@@ -66,25 +66,6 @@ class dwin {
 			HMI_Serial->write(_Register.High_Address);
 			HMI_Serial->write(_Register.Low_Address);
 
-			// Control for Data Type
-			if (_Data_Type == __dWin_TEXT__) {
-
-				// Define Array
-				const char _Text_Header[6] = {0xA1, 0x00, 0x30, 0x03, 0x01, 0xDF};
-
-				// Send Pack
-				for (size_t i = 0; i < 6; i++) {
-					
-					// Send Data Pack
-					HMI_Serial->write(_Text_Header[i]);
-
-					// Send Delay
-					delay(1);
-
-				}
-
-			}
-
 			// Send Pack
 			for (size_t i = 0; i < _Size; i++) {
 				
@@ -94,7 +75,7 @@ class dwin {
 			}
 
 			// Command Delay
-			delay(10);
+			delay(100);
 			
 		}
 
@@ -225,7 +206,7 @@ class dwin {
 			uint8_t Data[2] = {0x00, 0x00};
 
 			// Convert Value
-			uint16_t _Value_RAW = uint16_t(_Value * 10);
+			uint16_t _Value_RAW = (uint16_t)abs(_Value * 100);
 
 			// Set Data Low/High Byte
 			Data[1] = (_Value_RAW & (uint16_t)0x00FF);
@@ -257,6 +238,56 @@ class dwin {
 				this->Write_VP(Data_Register, __dWin_POINTER__, Data, 2);
 
 			} 
+			
+		}
+
+		/**
+		 * @brief HMI Get current ratio function.
+		 */
+		uint8_t Get_HMI_Current_Ratio(void) {
+
+			// ->S: 5a a5 04 83 50 04 01 
+			// ->R: 5a a5 06 83 50 04 01 00 00 
+			// ->S: 5a a5 04 83 50 04 01 
+			// ->R: 5a a5 06 83 50 04 01 00 03
+
+			// Declare Default Data Array
+			uint8_t Data[7] = {0x5A, 0xA5, 0x04, 0x83, 0x50, 0x04, 0x01};
+
+			// Send Pack
+			for (size_t i = 0; i < 7; i++) {
+				
+				// Send Data Pack
+				HMI_Serial->write(Data[i]);
+
+				// Stream Delay
+				delay(1);
+
+			}
+
+			// Command Delay
+			delay(50);
+
+			// Declare Variable
+			uint8_t _Response[9];
+			uint8_t _Response_Order = 0;
+
+			// Read UART Response
+			while(HMI_Serial->available() > 0) {
+
+				// Read Serial Char
+				_Response[_Response_Order] = HMI_Serial->read();
+				
+				// Increase Read Order
+				_Response_Order++;
+				
+				// Stream Delay
+				delay(1);
+				
+			}
+
+			// End Function
+			return(_Response[0]);
 			
 		}
 
@@ -312,15 +343,54 @@ class dwin {
 			// Declare Default Data Array
 			uint8_t Data[2] = {0x00, 0x00};
 
-			// Convert Value
+			// Convert Valueh
 			uint16_t _Value_RAW = uint16_t(_Value * 100);
+
+			// Handle Negative
+			if (_Value > 0) {
+
+				// Set Data Low/High Byte
+				Data[1] = (_Value_RAW & (uint16_t)0x00FF);
+				Data[0]  = ((_Value_RAW & (uint16_t)0xFF00) >> 8);
+
+
+			} else {
+
+				// Handle Value
+				_Value_RAW = 0xFFFF & (~_Value_RAW + 1);
+
+				// Set Data Low/High Byte
+				Data[1] = (_Value_RAW & (uint16_t)0x00FF);
+				Data[0]  = ((_Value_RAW & (uint16_t)0xFF00) >> 8);
+
+			}
+
+			// Declare Data Register
+			Register Data_Register {0x60, 0x12};
+
+			// Write Data
+			this->Write_VP(Data_Register, __dWin_POINTER__, Data, 2);
+
+		}
+
+		/**
+		 * @brief HMI power consumption display function.
+		 * @param _Value Phase value
+		 */
+		void Set_HMI_PowerConsumption(uint16_t _Value) {
+
+			// Declare Default Data Array
+			uint8_t Data[2] = {0x00, 0x00};
+
+			// Convert Value
+			uint16_t _Value_RAW = uint16_t(_Value);
 
 			// Set Data Low/High Byte
 			Data[1] = (_Value_RAW & (uint16_t)0x00FF);
 			Data[0]  = ((_Value_RAW & (uint16_t)0xFF00) >> 8);
 
 			// Declare Data Register
-			Register Data_Register {0x60, 0x12};
+			Register Data_Register {0x60, 0x46};
 
 			// Write Data
 			this->Write_VP(Data_Register, __dWin_POINTER__, Data, 2);
@@ -401,7 +471,7 @@ class dwin {
 			Set_HMI_Battery_FB(_FB);
 
 			// Set IB Value
-			Set_HMI_Battery_IV(_IB);
+			Set_HMI_Battery_IB(_IB);
 
 		}
 
@@ -519,10 +589,10 @@ class dwin {
 			Data[0]  = ((_Value_RAW & (uint16_t)0xFF00) >> 8);
 
 			// Decide Colour
-			if ((uint16_t)_Value_RAW > (uint16_t)0) {
+			if ((uint16_t)_Value_RAW < (uint16_t)400) {
 
 				// Declare Color Register
-				Register Color_Register {0x70, 0xC3};
+				Register Color_Register {0x80, 0xF3};
 
 				// Write Data
 				this->Write_VP(Color_Register, __dWin_POINTER__, Color_Red, 2);
@@ -530,7 +600,7 @@ class dwin {
 			} else {
 
 				// Declare Color Register
-				Register Color_Register {0x70, 0xC3};
+				Register Color_Register {0x80, 0xF3};
 
 				// Write Data
 				this->Write_VP(Color_Register, __dWin_POINTER__, Color_White, 2);
@@ -562,10 +632,10 @@ class dwin {
 			Data[0]  = ((_Value_RAW & (uint16_t)0xFF00) >> 8);
 
 			// Decide Colour
-			if ((uint16_t)_Value_RAW > (uint16_t)0) {
+			if ((uint16_t)_Value_RAW > (uint16_t)50) {
 
 				// Declare Color Register
-				Register Color_Register {0x70, 0xD3};
+				Register Color_Register {0x81, 0x03};
 
 				// Write Data
 				this->Write_VP(Color_Register, __dWin_POINTER__, Color_Red, 2);
@@ -573,7 +643,7 @@ class dwin {
 			} else {
 
 				// Declare Color Register
-				Register Color_Register {0x70, 0xD3};
+				Register Color_Register {0x81, 0x03};
 
 				// Write Data
 				this->Write_VP(Color_Register, __dWin_POINTER__, Color_White, 2);
@@ -744,6 +814,38 @@ class dwin {
 			
 			// Declare Data Register
 			Register Data_Register {0x60, 0x01};
+
+			// Write Data
+			this->Write_VP(Data_Register, __dWin_POINTER__, Data, 2);
+
+		}
+
+		/**
+		 * @brief HMI GSM data send display function.
+		 * @param _Level Send progress value
+		 */
+		void Set_HMI_GSM_Send(uint8_t _Level) {
+
+			// Declare Default Data Array
+			uint8_t Data[2] = {0x00, 0x00};
+
+			// Set Data Array
+			if (_Level == 1) {
+
+				Data[1] = 0x01;
+
+			} else if (_Level == 0) {
+
+				Data[1] = 0x00;
+
+			} else if (_Level == 2) {
+
+				Data[1] = 0x02;
+
+			}
+
+			// Declare Data Register
+			Register Data_Register {0x60, 0x80};
 
 			// Write Data
 			this->Write_VP(Data_Register, __dWin_POINTER__, Data, 2);
@@ -968,7 +1070,7 @@ class dwin {
 			Register Data_Register {0x70, 0x40};
 
 			// Declare Data
-			uint8_t _Data[16];
+			uint8_t _Data[16] = {0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00};
 
 			// Convert char to uint array
 			for (size_t i = 0; i < 16; i++) {
@@ -1013,34 +1115,51 @@ class dwin {
 			// Declare Default Data Array
 			uint8_t Data[2] = {0x00, 0x00};
 
-			// Convert Value
-			uint16_t _Value_RAW = uint16_t(_State);
-
 			// Set Data Low/High Byte
-			Data[1] = (_Value_RAW & (uint16_t)0x00FF);
-			Data[0]  = ((_Value_RAW & (uint16_t)0xFF00) >> 8);
-
-			// Decide Colour
-			if ((uint16_t)_Value_RAW > (uint16_t)100) {
-
-				// Declare Color Register
-				Register Color_Register {0x80, 0x83};
-
-				// Write Data
-				this->Write_VP(Color_Register, __dWin_POINTER__, Color_Red, 2);
-
-			} else {
-
-				// Declare Color Register
-				Register Color_Register {0x80, 0x83};
-
-				// Write Data
-				this->Write_VP(Color_Register, __dWin_POINTER__, Color_White, 2);
-
-			}
+			Data[1] = (_State & (uint16_t)0x00FF);
+			Data[0]  = ((_State & (uint16_t)0xFF00) >> 8);
 
 			// Declare Data Register
 			Register Data_Register {0x60, 0x48};
+
+			// Write Data
+			this->Write_VP(Data_Register, __dWin_POINTER__, Data, 2);
+
+		}
+
+		/**
+		 * @brief Device firmeare function.
+		 * @param _Firmware Firmware value
+		 */
+		void Set_HMI_Firmware(char * _Firmware) {
+
+			// Declare Data Register
+			Register Data_Register {0x70, 0x60};
+
+			// Declare Data
+			uint8_t _Data[8];
+
+			// Convert char to uint array
+			for (size_t i = 0; i < 8; i++) {
+				_Data[i] = uint8_t(_Firmware[i]);
+			}
+
+			// Write Data
+			this->Write_VP(Data_Register, __dWin_POINTER__, _Data, 16);
+
+		}
+
+		void Set_HMI_Test(uint16_t _Value) {
+
+			// Declare Default Data Array
+			uint8_t Data[2] = {0x00, 0x00};
+
+			// Set Data Low/High Byte
+			Data[1] = (_Value & (uint16_t)0x00FF);
+			Data[0] = ((_Value & (uint16_t)0xFF00) >> 8);
+
+			// Declare Data Register
+			Register Data_Register {0x60, 0x74};
 
 			// Write Data
 			this->Write_VP(Data_Register, __dWin_POINTER__, Data, 2);
