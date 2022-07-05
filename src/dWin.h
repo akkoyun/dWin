@@ -336,6 +336,7 @@ class dwin {
 
 		/**
 		 * @brief HMI power factor display function.
+		 * @version 01.00.01
 		 * @param _Value Phase value
 		 */
 		void Set_HMI_PowerFactor(float _Value) {
@@ -344,7 +345,7 @@ class dwin {
 			uint8_t Data[2] = {0x00, 0x00};
 
 			// Convert Valueh
-			uint16_t _Value_RAW = uint16_t(_Value * 100);
+			uint16_t _Value_RAW = uint16_t(_Value * 1000);
 
 			// Handle Negative
 			if (_Value > 0) {
