@@ -344,7 +344,7 @@ class dwin {
 			// Declare Default Data Array
 			uint8_t Data[2] = {0x00, 0x00};
 
-			// Convert Valueh
+			// Convert Value
 			uint16_t _Value_RAW = uint16_t(_Value * 10000);
 
 			// Handle Negative
