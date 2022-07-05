@@ -2,7 +2,7 @@
 
 ![GitHub release (latest by date)](https://img.shields.io/github/v/release/akkoyun/dWin) ![arduino-library-badge](https://www.ardu-badge.com/badge/dWin.svg?) ![Visits Badge](https://badges.pufler.dev/visits/akkoyun/dWin) ![GitHub stars](https://img.shields.io/github/stars/akkoyun/dWin?style=flat&logo=github) ![Updated Badge](https://badges.pufler.dev/updated/akkoyun/dWin) ![GitHub](https://img.shields.io/github/license/akkoyun/dWin) ![PlatformIO Registry](https://badges.registry.platformio.org/packages/akkoyun/library/dWin.svg)
 
-	Library - 01.01.04
+	Library - 01.01.06
 
 ---
 
