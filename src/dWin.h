@@ -345,7 +345,7 @@ class dwin {
 			uint8_t Data[2] = {0x00, 0x00};
 
 			// Convert Valueh
-			uint16_t _Value_RAW = uint16_t(_Value * 1000);
+			uint16_t _Value_RAW = uint16_t(_Value * 10000);
 
 			// Handle Negative
 			if (_Value > 0) {
