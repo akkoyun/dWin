@@ -293,6 +293,9 @@ class dwin {
 			// Set serial port
 			this->Variables.HMI_Serial = &_Serial;
 
+			// Set sleep
+			this->Sleep(true);
+
 		}
 
 		/**
@@ -321,8 +324,8 @@ class dwin {
 			Data[0] = 0x64;
 
 			// Data[1] - Sleep State Brightnes
-			if (_Status) Data[1] = 0x64;
-			if (!_Status) Data[1] = 0x00;
+			if (_Status) Data[1] = 0x00;
+			if (!_Status) Data[1] = 0x64;
 			
 			// Data[2] - Sleep Time
 			Data[2] = 0x0B;
@@ -340,19 +343,24 @@ class dwin {
 		 */
 		void Time_Stamp(uint8_t _Day, uint8_t _Month, uint8_t _Year, uint8_t _Hour, uint8_t _Minute, uint8_t _Second) {
 
-			// Declare Default Data Array
-			uint8_t Data[8];
+			// Control for LCD Enable
+			if (this->Variables.LCD_Enable) {
 
-			// Set Array Values
-			Data[0] = _Year;
-			Data[1] = _Month;
-			Data[2] = _Day;
-			Data[4] = _Hour;
-			Data[5] = _Minute;
-			Data[6] = _Second;
+				// Declare Default Data Array
+				uint8_t Data[8];
 
-			// Write Data
-			this->Write_Register_Long(this->Variables.Registers.Time_Stamp_Register, Data, 8);
+				// Set Array Values
+				Data[0] = _Year;
+				Data[1] = _Month;
+				Data[2] = _Day;
+				Data[4] = _Hour;
+				Data[5] = _Minute;
+				Data[6] = _Second;
+
+				// Write Data
+				this->Write_Register_Long(this->Variables.Registers.Time_Stamp_Register, Data, 8);
+
+			}
 
 		}
 
@@ -362,15 +370,20 @@ class dwin {
 		 */
 		void Status(uint16_t _State) {
 
-			// Declare Default Data Array
-			uint8_t Data[2] = {0x00, 0x00};
+			// Control for LCD Enable
+			if (this->Variables.LCD_Enable) {
 
-			// Set Data Low/High Byte
-			Data[1] = (_State & (uint16_t)0x00FF);
-			Data[0] = (_State & (uint16_t)0xFF00) >> 8;
+				// Declare Default Data Array
+				uint8_t Data[2] = {0x00, 0x00};
 
-			// Write Data
-			this->Write_Register(this->Variables.Registers.Device_Status_Register, Data);
+				// Set Data Low/High Byte
+				Data[1] = (_State & (uint16_t)0x00FF);
+				Data[0] = (_State & (uint16_t)0xFF00) >> 8;
+
+				// Write Data
+				this->Write_Register(this->Variables.Registers.Device_Status_Register, Data);
+			
+			}
 
 		}
 
@@ -380,14 +393,19 @@ class dwin {
 		 */
 		void Firmware(char * _Firmware) {
 
-			// Declare Data
-			uint8_t Data[8];
+			// Control for LCD Enable
+			if (this->Variables.LCD_Enable) {
 
-			// Convert char to uint array
-			for (size_t i = 0; i < 8; i++) Data[i] = uint8_t(_Firmware[i]);
+				// Declare Data
+				uint8_t Data[8];
 
-			// Write Data
-			this->Write_Register_Long(this->Variables.Registers.Firmware_Register, Data, 16);
+				// Convert char to uint array
+				for (size_t i = 0; i < 8; i++) Data[i] = uint8_t(_Firmware[i]);
+
+				// Write Data
+				this->Write_Register_Long(this->Variables.Registers.Firmware_Register, Data, 16);
+
+			}
 
 		}
 
@@ -494,29 +512,34 @@ class dwin {
 		 */
 		void Frequency(float _Value) {
 
-			// Declare Default Data Array
-			uint8_t Data[2] = {0x00, 0x00};
+			// Control for LCD Enable
+			if (this->Variables.LCD_Enable) {
 
-			// Convert Value
-			uint16_t _Value_RAW = uint16_t(_Value * __Frequency_Precision__);
+				// Declare Default Data Array
+				uint8_t Data[2] = {0x00, 0x00};
 
-			// Set Data Low/High Byte
-			Data[1] = (_Value_RAW & (uint16_t)0x00FF);
-			Data[0] = (_Value_RAW & (uint16_t)0xFF00) >> 8;
+				// Convert Value
+				uint16_t _Value_RAW = uint16_t(_Value * __Frequency_Precision__);
 
-			// Control Value Limit
-			if (this->Limit_Control(_Value, __Frequency_Min_Limit__, __Frequency_Max_Limit__)) {
+				// Set Data Low/High Byte
+				Data[1] = (_Value_RAW & (uint16_t)0x00FF);
+				Data[0] = (_Value_RAW & (uint16_t)0xFF00) >> 8;
 
-				this->Set_Color(this->Variables.Registers.Frequency_Color_Register, this->Variables.Colors.Red);
-				
-			} else {
+				// Control Value Limit
+				if (this->Limit_Control(_Value, __Frequency_Min_Limit__, __Frequency_Max_Limit__)) {
 
-				this->Set_Color(this->Variables.Registers.Frequency_Color_Register, this->Variables.Colors.White);
+					this->Set_Color(this->Variables.Registers.Frequency_Color_Register, this->Variables.Colors.Red);
+					
+				} else {
 
+					this->Set_Color(this->Variables.Registers.Frequency_Color_Register, this->Variables.Colors.White);
+
+				}
+
+				// Write Data
+				this->Write_Register(this->Variables.Registers.Frequency_Register, Data);
+			
 			}
-
-			// Write Data
-			this->Write_Register(this->Variables.Registers.Frequency_Register, Data);
 
 		}
 
@@ -527,33 +550,38 @@ class dwin {
 		 */
 		void PowerFactor(float _Value) {
 
-			// Declare Default Data Array
-			uint8_t Data[2] = {0x00, 0x00};
+			// Control for LCD Enable
+			if (this->Variables.LCD_Enable) {
 
-			// Convert Value
-			uint16_t _Value_RAW = uint16_t(_Value * __PowerFactor_Precision__);
+				// Declare Default Data Array
+				uint8_t Data[2] = {0x00, 0x00};
 
-			// Handle Negative
-			if (_Value > 0) {
+				// Convert Value
+				uint16_t _Value_RAW = uint16_t(_Value * __PowerFactor_Precision__);
 
-				// Set Data Low/High Byte
-				Data[1] = (_Value_RAW & (uint16_t)0x00FF);
-				Data[0] = (_Value_RAW & (uint16_t)0xFF00) >> 8;
+				// Handle Negative
+				if (_Value > 0) {
+
+					// Set Data Low/High Byte
+					Data[1] = (_Value_RAW & (uint16_t)0x00FF);
+					Data[0] = (_Value_RAW & (uint16_t)0xFF00) >> 8;
 
 
-			} else {
+				} else {
 
-				// Set negative Value
-				_Value_RAW = 0xFFFF & (~_Value_RAW + 1);
+					// Set negative Value
+					_Value_RAW = 0xFFFF & (~_Value_RAW + 1);
 
-				// Set Data Low/High Byte
-				Data[1] = (_Value_RAW & (uint16_t)0x00FF);
-				Data[0] = (_Value_RAW & (uint16_t)0xFF00) >> 8;
+					// Set Data Low/High Byte
+					Data[1] = (_Value_RAW & (uint16_t)0x00FF);
+					Data[0] = (_Value_RAW & (uint16_t)0xFF00) >> 8;
+
+				}
+
+				// Write Data
+				this->Write_Register(this->Variables.Registers.PowerFactor_Register, Data);
 
 			}
-
-			// Write Data
-			this->Write_Register(this->Variables.Registers.PowerFactor_Register, Data);
 
 		}
 
@@ -563,18 +591,23 @@ class dwin {
 		 */
 		void PowerConsumption(uint16_t _Value) {
 
-			// Declare Default Data Array
-			uint8_t Data[2] = {0x00, 0x00};
+			// Control for LCD Enable
+			if (this->Variables.LCD_Enable) {
 
-			// Convert Value
-			uint16_t _Value_RAW = uint16_t(_Value);
+				// Declare Default Data Array
+				uint8_t Data[2] = {0x00, 0x00};
 
-			// Set Data Low/High Byte
-			Data[1] = (_Value_RAW & (uint16_t)0x00FF);
-			Data[0] = (_Value_RAW & (uint16_t)0xFF00) >> 8;
+				// Convert Value
+				uint16_t _Value_RAW = uint16_t(_Value);
 
-			// Write Data
-			this->Write_Register(this->Variables.Registers.PowerConsumption_Register, Data);
+				// Set Data Low/High Byte
+				Data[1] = (_Value_RAW & (uint16_t)0x00FF);
+				Data[0] = (_Value_RAW & (uint16_t)0xFF00) >> 8;
+
+				// Write Data
+				this->Write_Register(this->Variables.Registers.PowerConsumption_Register, Data);
+
+			}
 
 		}
 
@@ -584,30 +617,35 @@ class dwin {
 		 */
 		void Pressure(float _Value) {
 
-			// Declare Default Data Array
-			uint8_t Data[2] = {0x00, 0x00};
+			// Control for LCD Enable
+			if (this->Variables.LCD_Enable) {
 
-			// Convert Value
-			uint16_t _Value_RAW = uint16_t(_Value * __Pressure_Precision__);
+				// Declare Default Data Array
+				uint8_t Data[2] = {0x00, 0x00};
 
-			// Set Data Low/High Byte
-			Data[1] = (_Value_RAW & (uint16_t)0x00FF);
-			Data[0] = (_Value_RAW & (uint16_t)0xFF00) >> 8;
+				// Convert Value
+				uint16_t _Value_RAW = uint16_t(_Value * __Pressure_Precision__);
 
-			// Control Value Limit
-			if (this->Limit_Control(_Value, 0, __Pressure_Max_Limit__)) {
+				// Set Data Low/High Byte
+				Data[1] = (_Value_RAW & (uint16_t)0x00FF);
+				Data[0] = (_Value_RAW & (uint16_t)0xFF00) >> 8;
 
-				this->Set_Color(this->Variables.Registers.Pressure_Color_Register, this->Variables.Colors.Red);
-				
-			} else {
+				// Control Value Limit
+				if (this->Limit_Control(_Value, 0, __Pressure_Max_Limit__)) {
 
-				this->Set_Color(this->Variables.Registers.Pressure_Color_Register, this->Variables.Colors.White);
+					this->Set_Color(this->Variables.Registers.Pressure_Color_Register, this->Variables.Colors.Red);
+					
+				} else {
 
+					this->Set_Color(this->Variables.Registers.Pressure_Color_Register, this->Variables.Colors.White);
+
+				}
+
+				// Write Data
+				this->Write_Register(this->Variables.Registers.Pressure_Register, Data);
+			
 			}
-
-			// Write Data
-			this->Write_Register(this->Variables.Registers.Pressure_Register, Data);
-
+		
 		}
 
 		/**
@@ -619,17 +657,22 @@ class dwin {
 		 */
 		void Battery(uint8_t _Level, float _IV, float _AC, float _SOC) {
 
-			// Set Battery Icon
-			this->Battery_Icon(_Level);
+			// Control for LCD Enable
+			if (this->Variables.LCD_Enable) {
 
-			// Set IV Value
-			this->Battery_Voltage(_IV);
+				// Set Battery Icon
+				this->Battery_Icon(_Level);
 
-			// Set AC Value
-			this->Battery_Current(_AC);
+				// Set IV Value
+				this->Battery_Voltage(_IV);
 
-			// Set SOC Value
-			this->Battery_SOC(_SOC);
+				// Set AC Value
+				this->Battery_Current(_AC);
+
+				// Set SOC Value
+				this->Battery_SOC(_SOC);
+
+			}
 
 		}
 
@@ -639,19 +682,24 @@ class dwin {
 		 */
 		void Battery_Icon(uint8_t _Level) {
 
-			// Declare Default Data Array
-			uint8_t Data[2] = {0x00, 0x00};
+			// Control for LCD Enable
+			if (this->Variables.LCD_Enable) {
 
-			// Set Data Array
-			if (_Level == 0) Data[1] = 0x00;
-			if (_Level == 1) Data[1] = 0x01;
-			if (_Level == 2) Data[1] = 0x02;
-			if (_Level == 3) Data[1] = 0x03;
-			if (_Level == 4) Data[1] = 0x04;
-			if (_Level == 5) Data[1] = 0x05;
+				// Declare Default Data Array
+				uint8_t Data[2] = {0x00, 0x00};
 
-			// Write Data
-			this->Write_Register(this->Variables.Registers.Battery_Icon_Register, Data);
+				// Set Data Array
+				if (_Level == 0) Data[1] = 0x00;
+				if (_Level == 1) Data[1] = 0x01;
+				if (_Level == 2) Data[1] = 0x02;
+				if (_Level == 3) Data[1] = 0x03;
+				if (_Level == 4) Data[1] = 0x04;
+				if (_Level == 5) Data[1] = 0x05;
+
+				// Write Data
+				this->Write_Register(this->Variables.Registers.Battery_Icon_Register, Data);
+
+			}
 
 		}
 
@@ -661,29 +709,34 @@ class dwin {
 		 */
 		void Battery_Voltage(float _Value) {
 
-			// Declare Default Data Array
-			uint8_t Data[2] = {0x00, 0x00};
+			// Control for LCD Enable
+			if (this->Variables.LCD_Enable) {
 
-			// Convert Value
-			uint16_t _Value_RAW = uint16_t(_Value * __Battery_Voltage_Precision__);
+				// Declare Default Data Array
+				uint8_t Data[2] = {0x00, 0x00};
 
-			// Set Data Low/High Byte
-			Data[1] = (_Value_RAW & (uint16_t)0x00FF);
-			Data[0] = (_Value_RAW & (uint16_t)0xFF00) >> 8;
+				// Convert Value
+				uint16_t _Value_RAW = uint16_t(_Value * __Battery_Voltage_Precision__);
 
-			// Control Value Limit
-			if (this->Limit_Control(_Value, __Battery_Voltage_Min_Limit__, __Battery_Voltage_Max_Limit__)) {
+				// Set Data Low/High Byte
+				Data[1] = (_Value_RAW & (uint16_t)0x00FF);
+				Data[0] = (_Value_RAW & (uint16_t)0xFF00) >> 8;
 
-				this->Set_Color(this->Variables.Registers.Battery_Voltage_Color_Register, this->Variables.Colors.Red);
-				
-			} else {
+				// Control Value Limit
+				if (this->Limit_Control(_Value, __Battery_Voltage_Min_Limit__, __Battery_Voltage_Max_Limit__)) {
 
-				this->Set_Color(this->Variables.Registers.Battery_Voltage_Color_Register, this->Variables.Colors.White);
+					this->Set_Color(this->Variables.Registers.Battery_Voltage_Color_Register, this->Variables.Colors.Red);
+					
+				} else {
+
+					this->Set_Color(this->Variables.Registers.Battery_Voltage_Color_Register, this->Variables.Colors.White);
+
+				}
+
+				// Write Data
+				this->Write_Register(this->Variables.Registers.Battery_Voltage_Register, Data);
 
 			}
-
-			// Write Data
-			this->Write_Register(this->Variables.Registers.Battery_Voltage_Register, Data);
 
 		}
 
@@ -693,29 +746,34 @@ class dwin {
 		 */
 		void Battery_Current(float _Value) {
 
-			// Declare Default Data Array
-			uint8_t Data[2] = {0x00, 0x00};
+			// Control for LCD Enable
+			if (this->Variables.LCD_Enable) {
 
-			// Convert Value
-			uint16_t _Value_RAW = uint16_t(_Value * __Battery_Current_Precision__);
+				// Declare Default Data Array
+				uint8_t Data[2] = {0x00, 0x00};
 
-			// Set Data Low/High Byte
-			Data[1] = (_Value_RAW & (uint16_t)0x00FF);
-			Data[0] = (_Value_RAW & (uint16_t)0xFF00) >> 8;
+				// Convert Value
+				uint16_t _Value_RAW = uint16_t(_Value * __Battery_Current_Precision__);
 
-			// Control Value Limit
-			if (this->Limit_Control(_Value, __Battery_Current_Min_Limit__, __Battery_Current_Max_Limit__)) {
+				// Set Data Low/High Byte
+				Data[1] = (_Value_RAW & (uint16_t)0x00FF);
+				Data[0] = (_Value_RAW & (uint16_t)0xFF00) >> 8;
 
-				this->Set_Color(this->Variables.Registers.Battery_Current_Color_Register, this->Variables.Colors.Red);
-				
-			} else {
+				// Control Value Limit
+				if (this->Limit_Control(_Value, __Battery_Current_Min_Limit__, __Battery_Current_Max_Limit__)) {
 
-				this->Set_Color(this->Variables.Registers.Battery_Current_Color_Register, this->Variables.Colors.White);
+					this->Set_Color(this->Variables.Registers.Battery_Current_Color_Register, this->Variables.Colors.Red);
+					
+				} else {
+
+					this->Set_Color(this->Variables.Registers.Battery_Current_Color_Register, this->Variables.Colors.White);
+
+				}
+
+				// Write Data
+				this->Write_Register(this->Variables.Registers.Battery_Current_Register, Data);
 
 			}
-
-			// Write Data
-			this->Write_Register(this->Variables.Registers.Battery_Current_Register, Data);
 
 		}
 
@@ -725,18 +783,23 @@ class dwin {
 		 */
 		void Battery_SOC(float _Value) {
 
-			// Declare Default Data Array
-			uint8_t Data[2] = {0x00, 0x00};
+			// Control for LCD Enable
+			if (this->Variables.LCD_Enable) {
 
-			// Convert Value
-			uint16_t _Value_RAW = uint16_t(_Value * __Battery_SOC_Precision__);
+				// Declare Default Data Array
+				uint8_t Data[2] = {0x00, 0x00};
 
-			// Set Data Low/High Byte
-			Data[1] = (_Value_RAW & (uint16_t)0x00FF);
-			Data[0] = (_Value_RAW & (uint16_t)0xFF00) >> 8;
+				// Convert Value
+				uint16_t _Value_RAW = uint16_t(_Value * __Battery_SOC_Precision__);
 
-			// Write Data
-			this->Write_Register(this->Variables.Registers.Battery_SOC_Register, Data);
+				// Set Data Low/High Byte
+				Data[1] = (_Value_RAW & (uint16_t)0x00FF);
+				Data[0] = (_Value_RAW & (uint16_t)0xFF00) >> 8;
+
+				// Write Data
+				this->Write_Register(this->Variables.Registers.Battery_SOC_Register, Data);
+
+			}
 
 		}
 
@@ -756,14 +819,19 @@ class dwin {
 		 */
 		void GSM(uint8_t _Level, uint16_t _Conn, uint16_t _RSSI, uint16_t _Operator, char * _IMEI, char * _ICCID, char * _IP) {
 
-			// Set Data Set
-			this->GSM_Icon(_Level);
-			this->GSM_Connection_Time(_Conn);
-			this->GSM_RSSI(_RSSI);
-			this->GSM_Operator(_Operator);
-			this->GSM_IMEI(_IMEI);
-			this->GSM_ICCID(_ICCID);
-			this->GSM_IP(_IP);
+			// Control for LCD Enable
+			if (this->Variables.LCD_Enable) {
+
+				// Set Data Set
+				this->GSM_Icon(_Level);
+				this->GSM_Connection_Time(_Conn);
+				this->GSM_RSSI(_RSSI);
+				this->GSM_Operator(_Operator);
+				this->GSM_IMEI(_IMEI);
+				this->GSM_ICCID(_ICCID);
+				this->GSM_IP(_IP);
+
+			}
 
 		}
 
@@ -773,20 +841,25 @@ class dwin {
 		 */
 		void GSM_Icon(uint8_t _Level) {
 
-			// Declare Default Data Array
-			uint8_t Data[2] = {0x00, 0x00};
+			// Control for LCD Enable
+			if (this->Variables.LCD_Enable) {
 
-			// Set Data Array
-			if (_Level == 0) Data[1] = 0x00;
-			if (_Level == 1) Data[1] = 0x01;
-			if (_Level == 2) Data[1] = 0x02;
-			if (_Level == 3) Data[1] = 0x03;
-			if (_Level == 4) Data[1] = 0x04;
-			if (_Level == 5) Data[1] = 0x05;
-			if (_Level == 6) Data[1] = 0x06;
+				// Declare Default Data Array
+				uint8_t Data[2] = {0x00, 0x00};
 
-			// Write Data
-			this->Write_Register(this->Variables.Registers.GSM_Icon_Register, Data);
+				// Set Data Array
+				if (_Level == 0) Data[1] = 0x00;
+				if (_Level == 1) Data[1] = 0x01;
+				if (_Level == 2) Data[1] = 0x02;
+				if (_Level == 3) Data[1] = 0x03;
+				if (_Level == 4) Data[1] = 0x04;
+				if (_Level == 5) Data[1] = 0x05;
+				if (_Level == 6) Data[1] = 0x06;
+
+				// Write Data
+				this->Write_Register(this->Variables.Registers.GSM_Icon_Register, Data);
+
+			}
 
 		}
 
@@ -796,16 +869,21 @@ class dwin {
 		 */
 		void GSM_Send(uint8_t _Level) {
 
-			// Declare Default Data Array
-			uint8_t Data[2] = {0x00, 0x00};
+			// Control for LCD Enable
+			if (this->Variables.LCD_Enable) {
 
-			// Set Data Array
-			if (_Level == 0) Data[1] = 0x00; // Blank
-			if (_Level == 1) Data[1] = 0x01; // Sending
-			if (_Level == 2) Data[1] = 0x02; // Clock
+				// Declare Default Data Array
+				uint8_t Data[2] = {0x00, 0x00};
 
-			// Write Data
-			this->Write_Register(this->Variables.Registers.GSM_Send_Icon_Register, Data);
+				// Set Data Array
+				if (_Level == 0) Data[1] = 0x00; // Blank
+				if (_Level == 1) Data[1] = 0x01; // Sending
+				if (_Level == 2) Data[1] = 0x02; // Clock
+
+				// Write Data
+				this->Write_Register(this->Variables.Registers.GSM_Send_Icon_Register, Data);
+
+			}
 
 		}
 
@@ -815,18 +893,23 @@ class dwin {
 		 */
 		void GSM_RSSI(uint16_t _Value) {
 
-			// Declare Default Data Array
-			uint8_t Data[2] = {0x00, 0x00};
+			// Control for LCD Enable
+			if (this->Variables.LCD_Enable) {
 
-			// Convert Value
-			uint16_t _Value_RAW = uint16_t(_Value);
+				// Declare Default Data Array
+				uint8_t Data[2] = {0x00, 0x00};
 
-			// Set Data Low/High Byte
-			Data[1] = (_Value_RAW & (uint16_t)0x00FF);
-			Data[0] = (_Value_RAW & (uint16_t)0xFF00) >> 8;
+				// Convert Value
+				uint16_t _Value_RAW = uint16_t(_Value);
 
-			// Write Data
-			this->Write_Register(this->Variables.Registers.GSM_RSSI_Register, Data);
+				// Set Data Low/High Byte
+				Data[1] = (_Value_RAW & (uint16_t)0x00FF);
+				Data[0] = (_Value_RAW & (uint16_t)0xFF00) >> 8;
+
+				// Write Data
+				this->Write_Register(this->Variables.Registers.GSM_RSSI_Register, Data);
+
+			}
 
 		}
 
@@ -836,18 +919,23 @@ class dwin {
 		 */
 		void GSM_Operator(uint16_t _Value) {
 
-			// Declare Default Data Array
-			uint8_t Data[2] = {0x00, 0x00};
+			// Control for LCD Enable
+			if (this->Variables.LCD_Enable) {
 
-			// Convert Value
-			uint16_t _Value_RAW = uint16_t(_Value);
+				// Declare Default Data Array
+				uint8_t Data[2] = {0x00, 0x00};
 
-			// Set Data Low/High Byte
-			Data[1] = (_Value_RAW & (uint16_t)0x00FF);
-			Data[0] = (_Value_RAW & (uint16_t)0xFF00) >> 8;
+				// Convert Value
+				uint16_t _Value_RAW = uint16_t(_Value);
 
-			// Write Data
-			this->Write_Register(this->Variables.Registers.GSM_Operator_Register, Data);
+				// Set Data Low/High Byte
+				Data[1] = (_Value_RAW & (uint16_t)0x00FF);
+				Data[0] = (_Value_RAW & (uint16_t)0xFF00) >> 8;
+
+				// Write Data
+				this->Write_Register(this->Variables.Registers.GSM_Operator_Register, Data);
+
+			}
 
 		}
 
@@ -857,18 +945,23 @@ class dwin {
 		 */
 		void GSM_Connection_Time(uint16_t _Value) {
 
-			// Declare Default Data Array
-			uint8_t Data[2] = {0x00, 0x00};
+			// Control for LCD Enable
+			if (this->Variables.LCD_Enable) {
 
-			// Convert Value
-			uint16_t _Value_RAW = uint16_t(_Value);
+				// Declare Default Data Array
+				uint8_t Data[2] = {0x00, 0x00};
 
-			// Set Data Low/High Byte
-			Data[1] = (_Value_RAW & (uint16_t)0x00FF);
-			Data[0] = (_Value_RAW & (uint16_t)0xFF00) >> 8;
+				// Convert Value
+				uint16_t _Value_RAW = uint16_t(_Value);
 
-			// Write Data
-			this->Write_Register(this->Variables.Registers.GSM_ConnectionTime_Register, Data);
+				// Set Data Low/High Byte
+				Data[1] = (_Value_RAW & (uint16_t)0x00FF);
+				Data[0] = (_Value_RAW & (uint16_t)0xFF00) >> 8;
+
+				// Write Data
+				this->Write_Register(this->Variables.Registers.GSM_ConnectionTime_Register, Data);
+
+			}
 
 		}
 
@@ -878,14 +971,19 @@ class dwin {
 		 */
 		void GSM_IMEI(char * _IMEI) {
 
-			// Declare Data
-			uint8_t Data[20];
+			// Control for LCD Enable
+			if (this->Variables.LCD_Enable) {
 
-			// Convert char to uint array
-			for (size_t i = 0; i < 20; i++) Data[i] = uint8_t(_IMEI[i]);
+				// Declare Data
+				uint8_t Data[20];
 
-			// Write Data
-			this->Write_Register(this->Variables.Registers.GSM_IMEI_Register, Data);
+				// Convert char to uint array
+				for (size_t i = 0; i < 20; i++) Data[i] = uint8_t(_IMEI[i]);
+
+				// Write Data
+				this->Write_Register_Long(this->Variables.Registers.GSM_IMEI_Register, Data, 20);
+
+			}
 
 		}
 
@@ -895,14 +993,19 @@ class dwin {
 		 */
 		void GSM_ICCID(char * _ICCID) {
 
-			// Declare Data
-			uint8_t Data[20];
+			// Control for LCD Enable
+			if (this->Variables.LCD_Enable) {
 
-			// Convert char to uint array
-			for (size_t i = 0; i < 20; i++) Data[i] = uint8_t(_ICCID[i]);
+				// Declare Data
+				uint8_t Data[20];
 
-			// Write Data
-			this->Write_Register_Long(this->Variables.Registers.GSM_ICCID_Register, Data, 20);
+				// Convert char to uint array
+				for (size_t i = 0; i < 20; i++) Data[i] = uint8_t(_ICCID[i]);
+
+				// Write Data
+				this->Write_Register_Long(this->Variables.Registers.GSM_ICCID_Register, Data, 20);
+
+			}
 
 		}
 
@@ -912,15 +1015,20 @@ class dwin {
 		 */
 		void GSM_IP(char * _IP) {
 
-			// Declare Data
-			uint8_t Data[16] = {0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00};
+			// Control for LCD Enable
+			if (this->Variables.LCD_Enable) {
 
-			// Convert char to uint array
-			for (size_t i = 0; i < 16; i++) Data[i] = uint8_t(_IP[i]);
+				// Declare Data
+				uint8_t Data[16] = {0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00};
 
-			// Write Data
-			this->Write_Register_Long(this->Variables.Registers.GSM_IP_Register, Data, 16);
+				// Convert char to uint array
+				for (size_t i = 0; i < 16; i++) Data[i] = uint8_t(_IP[i]);
 
+				// Write Data
+				this->Write_Register_Long(this->Variables.Registers.GSM_IP_Register, Data, 16);
+
+			}
+			
 		}
 
 };
