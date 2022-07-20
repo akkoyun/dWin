@@ -5,10 +5,38 @@
 #######################################
 # Datatypes (KEYWORD1)
 #######################################
+dwin                        KEYWORD1
 
 #######################################
 # Methods and Functions (KEYWORD2)
 #######################################
+dwin                        KEYWORD2
+Begin                       KEYWORD2
+Reset                       KEYWORD2
+Sleep                       KEYWORD2
+Time_Stamp                  KEYWORD2
+Status                      KEYWORD2
+Firmware                    KEYWORD2
+Voltage                     KEYWORD2
+Current                     KEYWORD2
+Frequency                   KEYWORD2
+PowerFactor                 KEYWORD2
+PowerConsumption            KEYWORD2
+Pressure                    KEYWORD2
+Battery                     KEYWORD2
+Battery_Icon                KEYWORD2
+Battery_Voltage             KEYWORD2
+Battery_Current             KEYWORD2
+Battery_SOC                 KEYWORD2
+GSM                         KEYWORD2
+GSM_Icon                    KEYWORD2
+GSM_Send                    KEYWORD2
+GSM_RSSI                    KEYWORD2
+GSM_Operator                KEYWORD2
+GSM_Connection_Time         KEYWORD2
+GSM_IMEI                    KEYWORD2
+GSM_ICCID                   KEYWORD2
+GSM_IP                      KEYWORD2
 
 #######################################
 # Constants (LITERAL1)
