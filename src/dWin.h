@@ -804,9 +804,6 @@ class dwin {
 			if (_Level == 1) Data[1] = 0x01;
 			if (_Level == 2) Data[1] = 0x02;
 
-			// Declare Data Register
-			Register Data_Register {0x60, 0x80};
-
 			// Write Data
 			this->Write_Register(this->Variables.Registers.GSM_Send_Icon_Register, Data);
 
@@ -849,9 +846,6 @@ class dwin {
 			Data[1] = (_Value_RAW & (uint16_t)0x00FF);
 			Data[0] = (_Value_RAW & (uint16_t)0xFF00) >> 8;
 
-			// Declare Data Register
-			Register Data_Register {0x60, 0x72};
-
 			// Write Data
 			this->Write_Register(this->Variables.Registers.GSM_Operator_Register, Data);
 
@@ -872,9 +866,6 @@ class dwin {
 			// Set Data Low/High Byte
 			Data[1] = (_Value_RAW & (uint16_t)0x00FF);
 			Data[0] = (_Value_RAW & (uint16_t)0xFF00) >> 8;
-
-			// Declare Data Register
-			Register Data_Register {0x60, 0x68};
 
 			// Write Data
 			this->Write_Register(this->Variables.Registers.GSM_ConnectionTime_Register, Data);
