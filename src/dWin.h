@@ -57,7 +57,7 @@ class dwin {
 			/**
 			 * @brief Color Variables.
 			 */
-			struct Register_Struct {
+			struct Color_Struct {
 
 				/**
 				 * @brief Color Registers.
@@ -251,7 +251,7 @@ class dwin {
 		 * @return true 
 		 * @return false 
 		 */
-		void Write_Register(Register _Register, uint8_t *_Data, uint8_t _Size) {
+		void Write_Register_Long(Register _Register, uint8_t *_Data, uint8_t _Size) {
 
 			// Declare Length
 			uint8_t _Pack_Size = 3;
@@ -304,7 +304,7 @@ class dwin {
 			uint8_t Data[4] = {0x55, 0xAA, 0x5A, 0xA5};
 
 			// Write Data
-			this->Write_Register(this->Variables.Registers.Reset_Register, Data, 4);
+			this->Write_Register_Long(this->Variables.Registers.Reset_Register, Data, 4);
 
 		}
 
@@ -331,7 +331,7 @@ class dwin {
 			Data[3] = 0xB8;
 
 			// Write Data
-			this->Write_Register(this->Variables.Registers.Sleep_Register, Data, 4);
+			this->Write_Register_Long(this->Variables.Registers.Sleep_Register, Data, 4);
 
 		}
 
@@ -352,7 +352,7 @@ class dwin {
 			Data[6] = _Second;
 
 			// Write Data
-			this->Write_Register(this->Variables.Registers.Time_Stamp_Register, Data, 8);
+			this->Write_Register_Long(this->Variables.Registers.Time_Stamp_Register, Data, 8);
 
 		}
 
@@ -387,7 +387,7 @@ class dwin {
 			for (size_t i = 0; i < 8; i++) Data[i] = uint8_t(_Firmware[i]);
 
 			// Write Data
-			this->Write_Register(this->Variables.Registers.Firmware_Register, Data, 16);
+			this->Write_Register_Long(this->Variables.Registers.Firmware_Register, Data, 16);
 
 		}
 
@@ -911,7 +911,7 @@ class dwin {
 			for (size_t i = 0; i < 20; i++) Data[i] = uint8_t(_ICCID[i]);
 
 			// Write Data
-			this->Write_Register(this->Variables.Registers.GSM_ICCID_Register, Data, 20);
+			this->Write_Register_Long(this->Variables.Registers.GSM_ICCID_Register, Data, 20);
 
 		}
 
@@ -928,7 +928,7 @@ class dwin {
 			for (size_t i = 0; i < 16; i++) Data[i] = uint8_t(_IP[i]);
 
 			// Write Data
-			this->Write_Register(this->Variables.Registers.GSM_IP_Register, Data, 16);
+			this->Write_Register_Long(this->Variables.Registers.GSM_IP_Register, Data, 16);
 
 		}
 
