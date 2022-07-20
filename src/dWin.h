@@ -165,7 +165,7 @@ class dwin {
 				 * @brief GSM Registers.
 				 */
 				Register GSM_Icon_Register 				{0x60, 0x01};
-				Register GSM_Send_Icon_Register 		{0x60, 0x80};
+				Register GSM_Send_Icon_Register 		{0x60, 0x09};
 				Register GSM_RSSI_Register 				{0x60, 0x70};
 				Register GSM_Operator_Register 			{0x60, 0x72};
 				Register GSM_ConnectionTime_Register 	{0x60, 0x68};
@@ -800,9 +800,9 @@ class dwin {
 			uint8_t Data[2] = {0x00, 0x00};
 
 			// Set Data Array
-			if (_Level == 0) Data[1] = 0x00;
-			if (_Level == 1) Data[1] = 0x01;
-			if (_Level == 2) Data[1] = 0x02;
+			if (_Level == 0) Data[1] = 0x00; // Blank
+			if (_Level == 1) Data[1] = 0x01; // Sending
+			if (_Level == 2) Data[1] = 0x02; // Clock
 
 			// Write Data
 			this->Write_Register(this->Variables.Registers.GSM_Send_Icon_Register, Data);
