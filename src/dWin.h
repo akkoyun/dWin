@@ -381,7 +381,7 @@ class dwin {
 		 * @brief Offline interval function.
 		 * @param _Offline Status value
 		 */
-		void Online_Interval(uint16_t _Offline) {
+		void Offline_Interval(uint16_t _Offline) {
 
 			// Control for LCD Enable
 			if (this->Variables.LCD_Enable) {
