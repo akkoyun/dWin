@@ -1,12 +1,12 @@
-/* *******************************************************************************
- *  Copyright (C) 2014-2022 Mehmet Gunce Akkoyun Can not be copied and/or
- *	distributed without the express permission of Mehmet Gunce Akkoyun.
- *
- *	Library				: dWin HMI LCD Screen Library.
- *	Code Developer		: Mehmet Gunce Akkoyun (akkoyun@me.com)
- *	Code Developer		: Recep Senbas (recepsenbas@gmail.com)
- *
- *********************************************************************************/
+/**
+ * @file dWin.h
+ * @author Mehmet Günce Akkoyun (akkoyun@me.com)
+ * @author Recep Senbas (recepsenbas@gmail.com)
+ * @brief dWin HMI LCD Screen Library.
+ * @date 21.07.2022
+ * @copyright Copyright (c) 2022
+ * 
+ */
 
 #ifndef __dWin__
 #define __dWin__
@@ -91,70 +91,60 @@ class dwin {
 				Register Time_Stamp_Register 			{0x00, 0x10};
 
 				/**
-				 * @brief Device Status Register.
+				 * @brief Device Registers.
 				 */
 				Register Device_Status_Register 		{0x60, 0x48};
-
-				/**
-				 * @brief Firmware Register.
-				 */
 				Register Firmware_Register 				{0x70, 0x60};
+				Register Serial_ID_Register 			{0x70, 0x20};
+				Register Online_Interval_Register 		{0x71, 0x01};
+				Register Offline_Interval_Register 		{0x71, 0x02};
+				Register Temperature_Register 			{0x71, 0x03};
+				Register Send_OK_Register 				{0x71, 0x10};
+				Register Send_FAIL_Register 			{0x71, 0x12};
 
 				/**
-				 * @brief Voltage Color Registers.
-				 */
-				Register Voltage_R_Color_Register 		{0x80, 0x13};
-				Register Voltage_S_Color_Register 		{0x80, 0x23};
-				Register Voltage_T_Color_Register 		{0x80, 0x33};
-
-				/**
-				 * @brief Voltage Registers.
+				 * @brief Energy Registers.
 				 */
 				Register Voltage_R_Register 			{0x60, 0x32};
 				Register Voltage_S_Register 			{0x60, 0x34};
 				Register Voltage_T_Register 			{0x60, 0x36};
-
-				/**
-				 * @brief Frequency Register.
-				 */
-				Register Frequency_Register 			{0x60, 0x10};
-
-				/**
-				 * @brief Frequency Color Register.
-				 */
+				Register Voltage_R_Color_Register 		{0x80, 0x13};
+				Register Voltage_S_Color_Register 		{0x80, 0x23};
+				Register Voltage_T_Color_Register 		{0x80, 0x33};
+				Register Frequency_Register 			{0x60, 0x16};
 				Register Frequency_Color_Register 		{0x70, 0x73};
-
-				/**
-				 * @brief Power Factor Register.
-				 */
 				Register PowerFactor_Register 			{0x60, 0x12};
-
-				/**
-				 * @brief Power Consumption Register.
-				 */
 				Register PowerConsumption_Register 		{0x60, 0x46};
-
-				/**
-				 * @brief Current Registers.
-				 */
 				Register Current_R_Register 			{0x61, 0x38};
 				Register Current_S_Register 			{0x61, 0x40};
 				Register Current_T_Register 			{0x61, 0x42};
+				Register Current_R_Direction_Register 	{0x71, 0x05};
+				Register Current_S_Direction_Register 	{0x71, 0x06};
+				Register Current_T_Direction_Register 	{0x71, 0x07};
+
+				/**
+				 * @brief Input State Registers
+				 */
+				Register Input_R_Register 				{0x71, 0x08};
+				Register Input_S_Register 				{0x71, 0x09};
+				Register Input_T_Register 				{0x71, 0x0A};
+				Register Input_M1_Register 				{0x71, 0x0B};
+				Register Input_M2_Register 				{0x71, 0x0C};
+				Register Input_M3_Register 				{0x71, 0x0D};
+				Register Input_Th_Register 				{0x71, 0x0E};
+				Register Input_MP_Register 				{0x71, 0x0F};
 
 				/**
 				 * @brief Pressure Register.
 				 */
 				Register Pressure_Register 				{0x60, 0x30};
-
-				/**
-				 * @brief Pressure Color Register.
-				 */
 				Register Pressure_Color_Register 		{0x80, 0x83};
 
 				/**
 				 * @brief Battery Registers
 				 */
 				Register Battery_Icon_Register 			{0x60, 0x02};
+				Register Battery_Charge_Icon_Register 	{0x71, 0x00};
 				Register Battery_Voltage_Register 		{0x60, 0x50};
 				Register Battery_Current_Register 		{0x60, 0x54};
 				Register Battery_SOC_Register 			{0x60, 0x56};
@@ -365,6 +355,82 @@ class dwin {
 		}
 
 		/**
+		 * @brief Online interval function.
+		 * @param _Online Status value
+		 */
+		void Online_Interval(uint16_t _Online) {
+
+			// Control for LCD Enable
+			if (this->Variables.LCD_Enable) {
+
+				// Declare Default Data Array
+				uint8_t Data[2] = {0x00, 0x00};
+
+				// Set Data Low/High Byte
+				Data[1] = (_Online & (uint16_t)0x00FF);
+				Data[0] = (_Online & (uint16_t)0xFF00) >> 8;
+
+				// Write Data
+				this->Write_Register(this->Variables.Registers.Online_Interval_Register, Data);
+			
+			}
+
+		}
+
+		/**
+		 * @brief Offline interval function.
+		 * @param _Offline Status value
+		 */
+		void Online_Interval(uint16_t _Offline) {
+
+			// Control for LCD Enable
+			if (this->Variables.LCD_Enable) {
+
+				// Declare Default Data Array
+				uint8_t Data[2] = {0x00, 0x00};
+
+				// Set Data Low/High Byte
+				Data[1] = (_Offline & (uint16_t)0x00FF);
+				Data[0] = (_Offline & (uint16_t)0xFF00) >> 8;
+
+				// Write Data
+				this->Write_Register(this->Variables.Registers.Offline_Interval_Register, Data);
+			
+			}
+
+		}
+
+		/**
+		 * @brief Send OK function.
+		 * @param _OK Status value
+		 * @param _FAIL Status value
+		 */
+		void Data_Send_Counter(uint16_t _OK, uint16_t _FAIL) {
+
+			// Control for LCD Enable
+			if (this->Variables.LCD_Enable) {
+
+				// Declare Default Data Array
+				uint8_t Data_OK[2] = {0x00, 0x00};
+				uint8_t Data_FAIL[2] = {0x00, 0x00};
+
+				// Set Data Low/High Byte
+				Data_OK[1] = (_OK & (uint16_t)0x00FF);
+				Data_OK[0] = (_OK & (uint16_t)0xFF00) >> 8;
+
+				// Set Data Low/High Byte
+				Data_FAIL[1] = (_FAIL & (uint16_t)0x00FF);
+				Data_FAIL[0] = (_FAIL & (uint16_t)0xFF00) >> 8;
+
+				// Write Data
+				this->Write_Register(this->Variables.Registers.Send_OK_Register, Data_OK);
+				this->Write_Register(this->Variables.Registers.Send_FAIL_Register, Data_FAIL);
+			
+			}
+
+		}
+
+		/**
 		 * @brief Status function.
 		 * @param _State Status value
 		 */
@@ -404,6 +470,28 @@ class dwin {
 
 				// Write Data
 				this->Write_Register_Long(this->Variables.Registers.Firmware_Register, Data, 16);
+
+			}
+
+		}
+
+		/**
+		 * @brief Device ID Function.
+		 * @param _ID ID value
+		 */
+		void Serial_ID(char * _ID) {
+
+			// Control for LCD Enable
+			if (this->Variables.LCD_Enable) {
+
+				// Declare Data
+				uint8_t Data[16];
+
+				// Convert char to uint array
+				for (size_t i = 0; i < 16; i++) Data[i] = uint8_t(_ID[i]);
+
+				// Write Data
+				this->Write_Register_Long(this->Variables.Registers.Serial_ID_Register, Data, 16);
 
 			}
 
@@ -495,6 +583,15 @@ class dwin {
 				if (_Phase == __Current_R__) this->Write_Register(this->Variables.Registers.Current_R_Register, Data);
 				if (_Phase == __Current_S__) this->Write_Register(this->Variables.Registers.Current_S_Register, Data);
 				if (_Phase == __Current_T__) this->Write_Register(this->Variables.Registers.Current_T_Register, Data);
+
+				// Declare Direction Variables
+				uint8_t Data_Positive[2] = {0x00, 0x01};
+				uint8_t Data_Negative[2] = {0x00, 0x00};
+
+				// Write Direction Register Value
+				if (_Phase == __Current_R__) this->Write_Register(this->Variables.Registers.Current_R_Direction_Register, (_Value > 0 ? Data_Positive : Data_Negative));
+				if (_Phase == __Current_S__) this->Write_Register(this->Variables.Registers.Current_S_Direction_Register, (_Value > 0 ? Data_Positive : Data_Negative));
+				if (_Phase == __Current_T__) this->Write_Register(this->Variables.Registers.Current_T_Direction_Register, (_Value > 0 ? Data_Positive : Data_Negative));
 
 				// End Function
 				return(true);
@@ -612,6 +709,34 @@ class dwin {
 		}
 
 		/**
+		 * @brief Input direction display function.
+		 * @param _Input Input value
+		 * @param _State Input State value
+		 */
+		void Input_State(uint8_t _Input, uint8_t _State) {
+
+			// Control for LCD Enable
+			if (this->Variables.LCD_Enable) {
+
+				// Declare Direction Variables
+				uint8_t Data_ON[2] = {0x00, 0x01};
+				uint8_t Data_OFF[2] = {0x00, 0x00};
+
+				// Set Data Array
+				if (_Input == 0) this->Write_Register(this->Variables.Registers.Input_R_Register, (_State ? Data_ON : Data_OFF));
+				if (_Input == 1) this->Write_Register(this->Variables.Registers.Input_S_Register, (_State ? Data_ON : Data_OFF));
+				if (_Input == 2) this->Write_Register(this->Variables.Registers.Input_T_Register, (_State ? Data_ON : Data_OFF));
+				if (_Input == 3) this->Write_Register(this->Variables.Registers.Input_M1_Register, (_State ? Data_ON : Data_OFF));
+				if (_Input == 4) this->Write_Register(this->Variables.Registers.Input_M2_Register, (_State ? Data_ON : Data_OFF));
+				if (_Input == 5) this->Write_Register(this->Variables.Registers.Input_M3_Register, (_State ? Data_ON : Data_OFF));
+				if (_Input == 6) this->Write_Register(this->Variables.Registers.Input_Th_Register, (_State ? Data_ON : Data_OFF));
+				if (_Input == 7) this->Write_Register(this->Variables.Registers.Input_MP_Register, (_State ? Data_ON : Data_OFF));
+
+			}
+
+		}
+
+		/**
 		 * @brief HMI pressure display function.
 		 * @param _Value Pressure value
 		 */
@@ -646,6 +771,47 @@ class dwin {
 			
 			}
 		
+		}
+
+		/**
+		 * @brief HMI temperature display function.
+		 * @param _Value Temperature value
+		 */
+		void Temperature(float _Value) {
+
+			// Control for LCD Enable
+			if (this->Variables.LCD_Enable) {
+
+				// Declare Default Data Array
+				uint8_t Data[2] = {0x00, 0x00};
+
+				// Convert Value
+				uint16_t _Value_RAW = uint16_t(_Value * __Temperature_Precision__);
+
+				// Handle Negative
+				if (_Value > 0) {
+
+					// Set Data Low/High Byte
+					Data[1] = (_Value_RAW & (uint16_t)0x00FF);
+					Data[0] = (_Value_RAW & (uint16_t)0xFF00) >> 8;
+
+
+				} else {
+
+					// Set negative Value
+					_Value_RAW = 0xFFFF & (~_Value_RAW + 1);
+
+					// Set Data Low/High Byte
+					Data[1] = (_Value_RAW & (uint16_t)0x00FF);
+					Data[0] = (_Value_RAW & (uint16_t)0xFF00) >> 8;
+
+				}
+
+				// Write Data
+				this->Write_Register(this->Variables.Registers.Temperature_Register, Data);
+			
+			}
+
 		}
 
 		/**
@@ -698,6 +864,31 @@ class dwin {
 
 				// Write Data
 				this->Write_Register(this->Variables.Registers.Battery_Icon_Register, Data);
+
+			}
+
+		}
+
+		/**
+		 * @brief HMI battery charge icon display function.
+		 * @param _Charge Battery charge state
+		 */
+		void Battery_Charge_Icon(uint8_t _Charge) {
+
+			// Control for LCD Enable
+			if (this->Variables.LCD_Enable) {
+
+				// Declare Default Data Array
+				uint8_t Data[2] = {0x00, 0x00};
+
+				// Set Data Array
+				if (_Charge == 0) Data[1] = 0x00;
+				if (_Charge == 1) Data[1] = 0x01;
+				if (_Charge == 2) Data[1] = 0x02;
+				if (_Charge == 3) Data[1] = 0x03;
+
+				// Write Data
+				this->Write_Register(this->Variables.Registers.Battery_Charge_Icon_Register, Data);
 
 			}
 
@@ -1028,7 +1219,7 @@ class dwin {
 				this->Write_Register_Long(this->Variables.Registers.GSM_IP_Register, Data, 16);
 
 			}
-			
+
 		}
 
 };
