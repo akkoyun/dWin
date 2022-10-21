@@ -533,8 +533,8 @@ class dwin {
 				} else {
 
 					if (_Phase == __Voltage_R__) this->Set_Color(this->Variables.Registers.Voltage_R_Color_Register, this->Variables.Colors.White);
-					if (_Phase == __Voltage_S__) this->Set_Color(this->Variables.Registers.Voltage_R_Color_Register, this->Variables.Colors.White);
-					if (_Phase == __Voltage_T__) this->Set_Color(this->Variables.Registers.Voltage_R_Color_Register, this->Variables.Colors.White);
+					if (_Phase == __Voltage_S__) this->Set_Color(this->Variables.Registers.Voltage_S_Color_Register, this->Variables.Colors.White);
+					if (_Phase == __Voltage_T__) this->Set_Color(this->Variables.Registers.Voltage_T_Color_Register, this->Variables.Colors.White);
 
 				}
 
