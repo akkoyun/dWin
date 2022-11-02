@@ -262,6 +262,23 @@ class dwin {
 			
 		}
 
+		/**
+		* @brief Convert float value to HEX array and reverse array.
+		* @date 20.10.2022
+		*/
+		void FloatToHex(float f, byte* hex) {
+			
+			byte* f_byte = reinterpret_cast<byte*>(&f);
+			memcpy(hex, f_byte, 4);
+			for (int i=0, j =3; i<2; i++, j--) { //reverse
+				
+				byte temp = hex[i];
+				hex[i] = hex[j];
+				hex[j] = temp;
+
+			}
+		}
+
 	public:
 
 		/**
@@ -651,32 +668,13 @@ class dwin {
 			if (this->Variables.LCD_Enable) {
 
 				// Declare Default Data Array
-				uint8_t Data[2] = {0x00, 0x00};
+				uint8_t Data[4] = {0x00, 0x00, 0x00, 0x00};
 
 				// Convert Value
-				uint16_t _Value_RAW = uint16_t(_Value * __PowerFactor_Precision__);
-
-				// Handle Negative
-				if (_Value > 0) {
-
-					// Set Data Low/High Byte
-					Data[1] = (_Value_RAW & (uint16_t)0x00FF);
-					Data[0] = (_Value_RAW & (uint16_t)0xFF00) >> 8;
-
-
-				} else {
-
-					// Set negative Value
-					_Value_RAW = 0xFFFF & (~_Value_RAW + 1);
-
-					// Set Data Low/High Byte
-					Data[1] = (_Value_RAW & (uint16_t)0x00FF);
-					Data[0] = (_Value_RAW & (uint16_t)0xFF00) >> 8;
-
-				}
+				FloatToHex(_Value, Data);
 
 				// Write Data
-				this->Write_Register(this->Variables.Registers.PowerFactor_Register, Data);
+				this->Write_Register_Long(this->Variables.Registers.PowerFactor_Register, Data, 4);
 
 			}
 

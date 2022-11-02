@@ -2,7 +2,7 @@
  * @file dWin_Definitions.h
  * @author Mehmet Günce Akkoyun (akkoyun@me.com)
  * @brief dWin LCD Library Constants.
- * @version 2.0.8
+ * @version 2.0.9
  * @copyright Copyright (c) 2022
  */
 
