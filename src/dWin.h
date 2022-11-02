@@ -1063,16 +1063,34 @@ class dwin {
 			// Control for LCD Enable
 			if (this->Variables.LCD_Enable) {
 
-				// Declare Default Data Array
-				uint8_t Data[2] = {0x00, 0x00};
-
 				// Set Data Array
-				if (_Level == 0) Data[1] = 0x00; // Blank
-				if (_Level == 1) Data[1] = 0x01; // Sending
-				if (_Level == 2) Data[1] = 0x02; // Clock
+				if (_Level == 0) {
 
-				// Write Data
-				this->Write_Register(this->Variables.Registers.GSM_Send_Icon_Register, Data);
+					// Declare Default Data Array
+					uint8_t Data[2] = {0x00, 0x00};
+
+					// Write Data
+					this->Write_Register(this->Variables.Registers.GSM_Send_Icon_Register, Data);
+
+				} // Blank
+				else if (_Level == 1) {
+
+					// Declare Default Data Array
+					uint8_t Data[2] = {0x00, 0x01};
+
+					// Write Data
+					this->Write_Register(this->Variables.Registers.GSM_Send_Icon_Register, Data);
+
+				} // Sending
+				else if (_Level == 2) {
+
+					// Declare Default Data Array
+					uint8_t Data[2] = {0x00, 0x02};
+
+					// Write Data
+					this->Write_Register(this->Variables.Registers.GSM_Send_Icon_Register, Data);
+
+				} // Clock
 
 			}
 
